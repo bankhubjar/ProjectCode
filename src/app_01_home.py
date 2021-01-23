@@ -18,7 +18,7 @@ def webhook():
   print('here num1 = {0}'.format(num1))
   print('here num2 = {0}'.format(num2))
   return {
-        "fulfillmentText": 'The sum of the two numbers is: '+sum,
+        "fulfillmentText": 'The sum of the two numbers is: the fuck dude'+sum,
         "displayText": '25',
         "source": "webhookdata"
     }
