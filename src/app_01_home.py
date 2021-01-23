@@ -8,7 +8,10 @@ def index():
 
 
 @appBlueprint.route('/webhook',methods=['POST'])
- query_result = req.get('queryResult')
+def webhook():
+  req = request.get_json(silent=True, force=True)
+  sum = 0
+  query_result = req.get('queryResult')
   num1 = int(query_result.get('parameters').get('number'))
   num2 = int(query_result.get('parameters').get('number1'))
   sum = str(num1 + num2)
