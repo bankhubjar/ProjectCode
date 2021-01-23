@@ -1,11 +1,35 @@
 from flask import Blueprint
+from flask import Flask, render_template
 from flask import Flask,request
+from firebase import firebase
+
+firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.firebaseio.com/', None)
 import json
 appBlueprint = Blueprint("home",__name__)
 
 @appBlueprint.route("/")
-def index():
-    return 'Hello, I am Flask Application ssss.'
+def home():
+  result = firebase.get('/restaurants', None)
+  s = ""
+  for x  in result:
+    s += x["name"]
+    s += x["address"]
+    s += ", <br>"
+
+  return str(s)
+
+@appBlueprint.route('/submit', methods=['GET', 'POST'])
+def submit():
+
+    
+    name = "Newworld"
+    address = "NewworldEiEi"
+    new_data = {"name": name, "address": address}
+    firebase.post("/restaurants", new_data)
+    return "Thank you!"
+
+
+
 
 
 @appBlueprint.route('/webhook', methods=['POST'])
