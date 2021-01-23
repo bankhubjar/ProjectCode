@@ -21,21 +21,14 @@ def webhook():
     print('here num1 = {0}'.format(num1))
     print('here num2 = {0}'.format(num2))
     fulfillmentText = 'The sum of the two numbers is '+sum
-  if query_result.get('action') == 'multiply.numbers':
+  elif query_result.get('action') == 'multiply.numbers':
     num1 = int(query_result.get('parameters').get('number'))
     num2 = int(query_result.get('parameters').get('number1'))
     product = str(num1 * num2)
     print('here num1 = {0}'.format(num1))
     print('here num2 = {0}'.format(num2))
     fulfillmentText = 'The product of the two numbers is '+product
-    if query_result.get('action') == 'Listmenu':
-       with open('food.json') as json_file:
-        data = json.load(json_file)
-        s = ""
-        for p in data['eng_name']:
-            s += ","+p
-        fulfillmentText = 'list menu have  '+s
-       return {
+    return {
         "fulfillmentText": fulfillmentText,
         "displayText": '25',
         "source": "webhookdata"
