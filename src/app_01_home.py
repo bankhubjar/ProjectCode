@@ -106,7 +106,7 @@ def submit():
 #         "source": "webhookdata"
 #     }
     
-@appBlueprint.route('/webhook', method=['POST'])
+@appBlueprint.route('/webhook', methods=['POST'])
 def rejectOrder():
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
