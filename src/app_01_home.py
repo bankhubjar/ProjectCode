@@ -112,8 +112,10 @@ def rejectOrder():
     fullfillmentText = ''
     query_result = req.get('queryResult')
     if query_result.get('action') == 'order.typeFood':
-        orders = query_result.get('parameters')[0][0]
-        fullfillmentText = orders
+        orders = query_result.get('parameters')
+        fullfillmentText = orders[0][0]
+    if query_result.get('action') == 'order.reject':
+        fullfillmentText = "Message form python: เข้าใจแล้ว"
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
         return {
             "fulfillmentText": fullfillmentText,
