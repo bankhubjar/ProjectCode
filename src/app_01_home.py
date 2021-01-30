@@ -115,10 +115,8 @@ def rejectOrder():
     if query_result.get('action') == 'order.reject':
         fullfillmentText = "Message form python: เข้าใจแล้ว"
         return {
-            "fullfillmentText": fullfillmentText,
+            "fulfillmentText": fullfillmentText,
             "displayText": '25',
             "source": "webhookdata"
         }
-
-
         
