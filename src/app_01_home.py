@@ -111,12 +111,12 @@ def rejectOrder():
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
     query_result = req.get('queryResult')
-
     if query_result.get('action') == 'order.reject':
-        fullfillmentText = "Message form python: เข้าใจแล้ว"
+        orders = query_result.get('parameters')[0][0]
+        fullfillmentText = orders
+        # fullfillmentText = "Message form python: เข้าใจแล้ว"
         return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
             "source": "webhookdata"
-        }
-        
+        }  
