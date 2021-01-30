@@ -10,8 +10,8 @@ colorama==0.4.4
 cryptography==3.2.1
 distlib==0.3.1
 filelock==3.0.12
-firebase=>2.0.1
-firebase-admin=>3.5.1
+firebase==3.0.1
+firebase-admin==4.5.1
 Flask==1.1.2
 gcloud==0.18.3
 google-api-core==1.25.1
