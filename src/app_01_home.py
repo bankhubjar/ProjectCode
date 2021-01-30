@@ -106,19 +106,6 @@ def submit():
 #         "source": "webhookdata"
 #     }
     
-@appBlueprint.route('/webhook', method=['POST'])
-def rejectOrder():
-    req = request.get_json(silent=True, force=True)
-    fullfillmentText = ''
-    query_result = req.get('queryResult')
-
-    if query_result.get('action') == 'order.reject':
-        fullfillmentText = "Message form python: เข้าใจแล้ว"
-        return {
-            "fullfillment": fullfillmentText,
-            "displayText": '25',
-            "source": "webhookdata"
-        }
 
 
 
