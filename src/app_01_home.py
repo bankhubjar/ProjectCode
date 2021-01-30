@@ -111,7 +111,7 @@ def rejectOrder():
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
     query_result = req.get('queryResult')
-    if query_result.get('action') == 'order.reject':
+    if query_result.get('action') == 'order.typeFood':
         orders = query_result.get('parameters')[0][0]
         fullfillmentText = orders
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
