@@ -5,11 +5,11 @@
 #             s += ","+p
         
 #         print(s)
-mylist = ['first', 'second', 'other']
- s = ""
- for item in mylist:
-    s += item
+# mylist = ['first', 'second', 'other']
+#  s = ""
+#  for item in mylist:
+#     s += item
 
- s
+#  s
 
  

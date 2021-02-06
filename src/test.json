@@ -1,0 +1,68 @@
+{
+  "responseId": "7d93412e-9584-4cd5-bbca-18c0545f8b38-7fe75e93",
+  "queryResult": {
+    "queryText": "ของที่เคยบันทึก",
+    "parameters": {},
+    "allRequiredParamsPresent": true,
+    "fulfillmentText": "คุณ ริว เก็บสิ่งของชื่อ ตีน ไว้ตำแหน่ง ชักโครก",
+    "fulfillmentMessages": [
+      {
+        "text": {
+          "text": [
+            "คุณ ริว เก็บสิ่งของชื่อ ตีน ไว้ตำแหน่ง ชักโครก"
+          ]
+        }
+      }
+    ],
+    "outputContexts": [
+      {
+        "name": "projects/worawit-l9gi/locations/global/agent/sessions/af42e63c-2470-aae1-a311-224e625c77f4/contexts/objectplace",
+        "lifespanCount": 50,
+        "parameters": {
+          "place": "ชักโครก",
+          "place.original": "ชักโครก"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/locations/global/agent/sessions/af42e63c-2470-aae1-a311-224e625c77f4/contexts/objectname",
+        "lifespanCount": 50,
+        "parameters": {
+          "place": "ชักโครก",
+          "objname": "ตีน",
+          "place.original": "ชักโครก",
+          "objname.original": "ตีน"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/locations/global/agent/sessions/af42e63c-2470-aae1-a311-224e625c77f4/contexts/name",
+        "lifespanCount": 46,
+        "parameters": {
+          "name": "ริว",
+          "objname.original": "ตีน",
+          "name.original": "ริว",
+          "objname": "ตีน",
+          "place.original": "ชักโครก",
+          "place": "ชักโครก"
+        }
+      }
+    ],
+    "intent": {
+      "name": "projects/worawit-l9gi/locations/global/agent/intents/fab03fb1-d3fe-40ca-90e6-afaad8be2061",
+      "displayName": "Object - Request Name & Place"
+    },
+    "intentDetectionConfidence": 1,
+    "languageCode": "th"
+  },
+  "outputAudio": "UklGRqwWAgBXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YYgWAgACAAAA+/////////8AAP//AAD9/wAAAQABAAEAAQAA... (The content is truncated. Click `COPY` for the original JSON.)",
+  "outputAudioConfig": {
+    "audioEncoding": "OUTPUT_AUDIO_ENCODING_LINEAR_16",
+    "synthesizeSpeechConfig": {
+      "speakingRate": 1,
+      "voice": {}
+    }
+  },
+  "agentId": "11fd5bf5-25bf-4f7e-8417-c028017e7bc3",
+  "agentSettings": {
+    "enableAgentWideTts": true
+  }
+}

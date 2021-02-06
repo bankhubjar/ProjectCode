@@ -7,6 +7,8 @@ from urllib.parse import unquote
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
+import os
+from flask import Flask, render_template, url_for, json
 
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate('./src/testproject-9cef3-firebase-adminsdk-1hkji-3cdddd3c46.json')
@@ -36,11 +38,25 @@ def home():
     
 @appBlueprint.route("/next")
 def next():
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_url = os.path.join(SITE_ROOT, "", "test.json")
+    data = json.load(open(json_url, encoding="utf8"))
+    eiei = data['queryResult']
+    
+    ref2 = db.reference("/Remember")
+    NameU = eiei['outputContexts'][2]["parameters"]['name']
+    Item = eiei['outputContexts'][2]["parameters"]['objname']
+    Place = eiei['outputContexts'][2]["parameters"]['place']
+    users_r29 = ref2.child(NameU)
+    users_r29.set({
+        Item: Place
+        
+     })  
     # nameF = "/"+request.form['name']
-    ref1 = db.reference("/Remember")
-    data = ref1.get()
+    # ref1 = db.reference("/Remember")
+    # data = ref1.get()
   #sdasdasdasdsa
-    return data
+    return "kuy"
   # def getDB():
   #   return ref.get()
 #   users_ref = ref.child('something')
@@ -139,7 +155,7 @@ def rejectOrder():
         orders = query_result.get('parameters')
         fullfillmentText = orders[0][0]
     if query_result.get('action') == 'Listmenu':
-        fullfillmentText =  eiei["กุญแจ"]
+        fullfillmentText =  eiei["ริว"]["ตีน"]
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
         return {
             "fulfillmentText": fullfillmentText,
