@@ -2,7 +2,8 @@ from flask import Blueprint
 from flask import Flask, render_template
 from flask import Flask,request
 from firebase import firebase
-
+import urllib
+from urllib.parse import unquote
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
@@ -25,10 +26,23 @@ appBlueprint = Blueprint("home",__name__)
 
 @appBlueprint.route("/")
 def home():
-  return ref.get()
+     d = '<form action="next">'
+     f =  '<p>Field1 <input type = "text" name = "name" /></p>'
+     o = '<p><input type = "submit" value = "submit" /></p> </form>'
+     z = d+f+o
+     return z
+
   
     
-  
+@appBlueprint.route("/next")
+def next():
+    # nameF = "/"+request.form['name']
+    ref1 = db.reference("/Remember")
+    data = ref1.get()
+  #sdasdasdasdsa
+    return data
+  # def getDB():
+  #   return ref.get()
 #   users_ref = ref.child('something')
 # users_ref.set({
 #     'alanisawesome': {
@@ -65,7 +79,15 @@ def submit():
     })
   return "helloeiei"
 
-
+@appBlueprint.route("/test1")
+def submiteiei():
+  ref2 = db.reference("/Remember")  
+  users_r = ref2.child('EiEi')
+  users_r.set({
+        'หนังสือ': {
+        'สถานที่': 'หลังบ้าน'
+    }})
+  return "helloeiei"
 # @appBlueprint.route('/submit', methods=['GET', 'POST'])
 # def submit():
 
@@ -108,6 +130,8 @@ def submit():
     
 @appBlueprint.route('/webhook', methods=['POST'])
 def rejectOrder():
+    ref2 = db.reference("/Remember")  
+    eiei = ref2.get()
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
     query_result = req.get('queryResult')
@@ -115,10 +139,13 @@ def rejectOrder():
         orders = query_result.get('parameters')
         fullfillmentText = orders[0][0]
     if query_result.get('action') == 'order.reject':
-        fullfillmentText = "Message form python: เข้าใจแล้ว"
+        fullfillmentText =  eiei["กุญแจ"]
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
         return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
             "source": "webhookdata"
         }  
+
+
+
