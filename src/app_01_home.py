@@ -41,9 +41,8 @@ def next():
     SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
     json_url = os.path.join(SITE_ROOT, "", "test.json")
     data = json.load(open(json_url, encoding="utf8"))
-    eiei = data['queryResult']
-    
     ref2 = db.reference("/Remember")
+    eiei = data['queryResult']
     NameU = eiei['outputContexts'][2]["parameters"]['name']
     Item = eiei['outputContexts'][2]["parameters"]['objname']
     Place = eiei['outputContexts'][2]["parameters"]['place']
@@ -147,15 +146,23 @@ def submiteiei():
 @appBlueprint.route('/webhook', methods=['POST'])
 def rejectOrder():
     ref2 = db.reference("/Remember")  
-    eiei = ref2.get()
+    FDB = ref2.get()
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
     query_result = req.get('queryResult')
-    if query_result.get('action') == 'order.typeFood':
-        orders = query_result.get('parameters')
-        fullfillmentText = orders[0][0]
-    if query_result.get('action') == 'Listmenu':
-        fullfillmentText =  eiei["ริว"]["ตีน"]
+    NameU = query_result['outputContexts'][2]["parameters"]['name']
+    Item = query_result['outputContexts'][2]["parameters"]['objname']
+    Place = query_result['outputContexts'][2]["parameters"]['place']
+    if query_result.get('action') == 'object.confirm':        
+        users_r29 = ref2.child(NameU)
+        users_r29.set({
+          "ชื่อ":NameU,
+          Item: Place
+        })  
+        fullfillmentText = 'From Python คุณ'+ NameU+ 'บันทึกสิ่งของ : '+Item+ ' ไว้ตำแหน่ง ' + Place
+    if query_result.get('action') == 'object.remember':
+        Item2 = FDB[NameU]
+        fullfillmentText = 'From Python คุณ'+ Item2.keys()[0] + 'บันทึกสิ่งของ : '+Item2.keys()[1]+ ' ไว้ตำแหน่ง ' + FDB[NameU][Item] 
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
         return {
             "fulfillmentText": fullfillmentText,
