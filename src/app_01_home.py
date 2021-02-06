@@ -138,7 +138,7 @@ def rejectOrder():
     if query_result.get('action') == 'order.typeFood':
         orders = query_result.get('parameters')
         fullfillmentText = orders[0][0]
-    if query_result.get('action') == 'order.reject':
+    if query_result.get('action') == 'ListMenu':
         fullfillmentText =  eiei["กุญแจ"]
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
         return {
