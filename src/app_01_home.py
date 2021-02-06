@@ -150,10 +150,10 @@ def rejectOrder():
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
     query_result = req.get('queryResult')
-    NameU = query_result['outputContexts'][4]["parameters"]['name']
-    Item = query_result['outputContexts'][4]["parameters"]['objname']
-    Place = query_result['outputContexts'][4]["parameters"]['place']
-    if query_result.get('action') == 'object.confirm':        
+    if query_result.get('action') == 'object.confirm':
+        NameU = query_result['outputContexts'][4]["parameters"]['name']
+        Item = query_result['outputContexts'][4]["parameters"]['objname']
+        Place = query_result['outputContexts'][4]["parameters"]['place']        
         users_r29 = ref2.child(NameU)
         users_r29.set({
           "ชื่อ":NameU,
