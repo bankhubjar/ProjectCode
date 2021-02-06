@@ -150,9 +150,9 @@ def rejectOrder():
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
     query_result = req.get('queryResult')
-    NameU = query_result['outputContexts'][2]["parameters"]['name']
-    Item = query_result['outputContexts'][2]["parameters"]['objname']
-    Place = query_result['outputContexts'][2]["parameters"]['place']
+    NameU = query_result['outputContexts'][4]["parameters"]['name']
+    Item = query_result['outputContexts'][4]["parameters"]['objname']
+    Place = query_result['outputContexts'][4]["parameters"]['place']
     if query_result.get('action') == 'object.confirm':        
         users_r29 = ref2.child(NameU)
         users_r29.set({
@@ -164,11 +164,11 @@ def rejectOrder():
         Item2 = FDB[NameU]
         fullfillmentText = 'From Python คุณ'+ Item2.keys()[0] + 'บันทึกสิ่งของ : '+Item2.keys()[1]+ ' ไว้ตำแหน่ง ' + FDB[NameU][Item] 
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
-        return {
+    return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
             "source": "webhookdata"
-        }  
+    }  
 
 
 
