@@ -161,11 +161,12 @@ def rejectOrder():
         })  
         fullfillmentText = 'From Python คุณ'+ NameU+ 'บันทึกสิ่งของ : '+Item+ ' ไว้ตำแหน่ง ' + Place
     if query_result.get('action') == 'object.remember':
-        NameU = query_result['outputContexts'][3]["parameters"]['name']
-        Item = query_result['outputContexts'][3]["parameters"]['objname']
-        Place = query_result['outputContexts'][3]["parameters"]['place']
+        # NameU = query_result['outputContexts'][3]["parameters"]['name']
+        # Item = query_result['outputContexts'][3]["parameters"]['objname']
+        # Place = query_result['outputContexts'][3]["parameters"]['place']
         # Item2 = FDB[NameU]
-        fullfillmentText = 'From Python คุณ'+ str(FDB[NameU][Item]) + 'บันทึกสิ่งของ : '+str(FDB[NameU][Item])+ ' ไว้ตำแหน่ง ' + str(FDB[NameU][Item]) 
+        fullfillmentText = "12342132312414"
+        # 'From Python คุณ'+ str(FDB[NameU][Item]) + 'บันทึกสิ่งของ : '+str(FDB[NameU][Item])+ ' ไว้ตำแหน่ง ' + str(FDB[NameU][Item]) 
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
     return {
             "fulfillmentText": fullfillmentText,
