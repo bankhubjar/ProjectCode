@@ -143,7 +143,7 @@ def submiteiei():
 #         "source": "webhookdata"
 #     }
     
-@appBlueprint.route('/webhook', methods=['POST'])
+@appBlueprint.route('/webhook')
 def rejectOrder():
     ref2 = db.reference("/Remember")  
     FDB = ref2.get()
