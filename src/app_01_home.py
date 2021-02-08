@@ -8,6 +8,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 import os
+from datetime import date
 from flask import Flask, render_template, url_for, json
 
 # Fetch the service account key JSON file contents
@@ -41,7 +42,7 @@ def next():
     SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
     json_url = os.path.join(SITE_ROOT, "", "test.json")
     data = json.load(open(json_url, encoding="utf8"))
-    ref2 = db.reference("/Remember")
+    ref2 = db.reference("/Remember2")
     eiei = data['queryResult']
     NameU = eiei['outputContexts'][2]["parameters"]['name']
     Item = eiei['outputContexts'][2]["parameters"]['objname']
@@ -78,6 +79,21 @@ def next():
 
   # return str(s)
 
+
+@appBlueprint.route("/getDB")
+def getDBE():
+  RefG = db.reference('/RememberV2/Home')
+  count = 0
+  Deta = RefG.get()
+  eiei = ""
+  for key in Deta.keys(): eiei += key
+  # while 
+  # Data = Deta["Home"]["รายการที่"+ str(count)]
+  
+
+  return eiei
+
+
 @appBlueprint.route("/test")
 def submit():
     
@@ -106,7 +122,42 @@ def submiteiei():
 # @appBlueprint.route('/submit', methods=['GET', 'POST'])
 # def submit():
 
-    
+@appBlueprint.route("/HomeUser")    
+def HomeUser():
+       SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+       json_url = os.path.join(SITE_ROOT, "", "new.json")
+       data2 = json.load(open(json_url, encoding="utf8"))
+       data = data2['queryResult']
+       Place = data['outputContexts'][1]["parameters"]["place"]
+       objname = data['outputContexts'][1]["parameters"]["objname"] 
+       RefNo1 = db.reference("/RememberV2/Home") 
+       count = 0
+       Deta = RefNo1.get()
+       today = date.today()
+       d2 = today.strftime("%B %d, %Y")
+       try:
+          Deta.keys()
+       except: 
+          GoGo = RefNo1.child("รายการที่1")
+          GoGo.set({
+            "amonut":"1"
+            ,"id":count+1
+            ,"item":objname
+            ,"Location":Place
+            ,"time": d2
+         })
+          return "ควย"
+       else:
+         for key in Deta.keys(): count+= 1
+         GoGo = RefNo1.child("รายการที่"+str(count+1))
+         GoGo.set({
+            "amonut":"1"
+            ,"id":count+1
+            ,"item":objname
+            ,"Location":Place
+            ,"time": d2
+            })
+         return "ควย" 
 #     name = "Newworld"
 #     address = "NewworldEiEi"
 #     new_data = {"name": name, "address": address}
@@ -167,6 +218,38 @@ def rejectOrder():
         Item2 = FDB[NameU]
         fullfillmentText = 'From Python คุณ'+ str(Item2.keys()[0]) + 'บันทึกสิ่งของ : '+str(Item2.keys()[0])+ ' ไว้ตำแหน่ง ' + str(FDB[NameU][Item]) 
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
+    elif query_result.get('action') == 'object.confirm.noUsername':
+       data = query_result['queryResult']
+       Place = data['outputContexts'][1]["parameters"]["place"]
+       objname = data['outputContexts'][1]["parameters"]["objname"] 
+       RefNo1 = db.reference("/RememberV2/Home") 
+       count = 0
+       Deta = RefNo1.get()
+       today = date.today()
+       d2 = today.strftime("%B %d, %Y")
+       try:
+          Deta.keys()
+       except: 
+          GoGo = RefNo1.child("รายการที่1")
+          GoGo.set({
+            "amonut":"1"
+            ,"id":count+1
+            ,"item":objname
+            ,"Location":Place
+            ,"time": d2
+         })
+          return "ควย"
+       else:
+         for key in Deta.keys(): count+= 1
+         GoGo = RefNo1.child("รายการที่"+str(count+1))
+         GoGo.set({
+            "amonut":"1"
+            ,"id":count+1
+            ,"item":objname
+            ,"Location":Place
+            ,"time": d2
+            })
+         return "ควย"            
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
