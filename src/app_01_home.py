@@ -8,7 +8,6 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 import os
-from datetime import date
 from flask import Flask, render_template, url_for, json
 
 # Fetch the service account key JSON file contents
@@ -133,8 +132,8 @@ def HomeUser():
        RefNo1 = db.reference("/RememberV2/Home") 
        count = 0
        Deta = RefNo1.get()
-       today = date.today()
-       d2 = today.strftime("%B %d, %Y")
+       
+       d2 = "EiEi"
        try:
           Deta.keys()
        except: 
@@ -225,7 +224,7 @@ def rejectOrder():
        RefNo1 = db.reference("/RememberV2/Home") 
        count = 0
        Deta = RefNo1.get()
-       today = date.today()
+       
        "today.strftime(%B %d, %Y)"
        d2 = "EiEi"
        try:
