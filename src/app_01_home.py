@@ -226,7 +226,8 @@ def rejectOrder():
        count = 0
        Deta = RefNo1.get()
        today = date.today()
-       d2 = today.strftime("%B %d, %Y")
+       "today.strftime(%B %d, %Y)"
+       d2 = "EiEi"
        try:
           Deta.keys()
        except: 
