@@ -218,9 +218,9 @@ def rejectOrder():
         fullfillmentText = 'From Python คุณ'+ str(Item2.keys()[0]) + 'บันทึกสิ่งของ : '+str(Item2.keys()[0])+ ' ไว้ตำแหน่ง ' + str(FDB[NameU][Item]) 
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
     if query_result.get('action') == 'object.confirm.noUsername':
-       data = query_result['queryResult']
-       Place = data['outputContexts'][1]["parameters"]["place"]
-       objname = data['outputContexts'][1]["parameters"]["objname"] 
+       
+       Place = query_result['outputContexts'][1]["parameters"]["place"]
+       objname = query_result['outputContexts'][1]["parameters"]["objname"] 
        RefNo1 = db.reference("/RememberV2/Home") 
        count = 0
        Deta = RefNo1.get()
