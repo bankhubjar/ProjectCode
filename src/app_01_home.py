@@ -220,8 +220,8 @@ def rejectOrder():
         # fullfillmentText = "Message form python: เข้าใจแล้ว"
     elif query_result.get('action') == 'object.confirm.noUsername':
        data = query_result['queryResult']
-       Place = data['outputContexts'][1]["parameters"]["place"]
-       objname = data['outputContexts'][1]["parameters"]["objname"] 
+       Place = data['outputContexts'][2]["parameters"]["place"]
+       objname = data['outputContexts'][2]["parameters"]["objname"] 
        RefNo1 = db.reference("/RememberV2/Home") 
        count = 0
        Deta = RefNo1.get()
