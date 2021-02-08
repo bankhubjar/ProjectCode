@@ -238,7 +238,11 @@ def rejectOrder():
             ,"Location":Place
             ,"time": d2
          })
-          return "ควย"
+          return {
+            "fulfillmentText": "NoHave",
+            "displayText": '25',
+            "source": "webhookdata"
+    } 
        else:
          for key in Deta.keys(): count+= 1
          GoGo = RefNo1.child("รายการที่"+str(count+1))
@@ -249,7 +253,11 @@ def rejectOrder():
             ,"Location":Place
             ,"time": d2
             })
-         return "ควย"            
+         return {
+            "fulfillmentText": "Have1",
+            "displayText": '25',
+            "source": "webhookdata"
+    }            
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
