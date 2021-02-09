@@ -328,8 +328,10 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'showAll..specifyname':
-      for x in FDB.keys():
-        fulfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "      
+      RefNo1 = db.reference("/RememberV2/Home") 
+      get = RefNo1.get()
+      for x in get.keys():
+        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "      
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
