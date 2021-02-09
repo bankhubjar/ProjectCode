@@ -163,9 +163,35 @@ def HomeUser():
 #     firebase.post("/restaurants", new_data)
 #     return "Thank you!"
 
+@appBlueprint.route("/nospecifyname")
+def intentshowAllrequestno():
+  ref2 = db.reference("/RememberV2/Home")  
+  test = ref2.get()
+  fulfillmentText = ''
+  for x in test.keys():
+    fulfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  " 
+  return fulfillmentText
 
+@appBlueprint.route("/specifyitem")
+def intentshowAllrequestyesspecifyname():
+  ref2 = db.reference("/RememberV2/Home")  
+  test = ref2.get()
+  fulfillmentText = ''
+  for x in test.keys():
+    if(test[x]["item"] == "ควย"):
+      fulfillmentText +=' คุณได้บันทึก : '+str(test[x]["item"])+ " ไว้" 
+  return fulfillmentText
 
+@appBlueprint.route("/specifyLocation")
+def intentshowAllrequestyesspecifyLocation():
+  ref2 = db.reference("/RememberV2/Home")  
+  test = ref2.get()
+  fulfillmentText = ''
+  for x in test.keys():
 
+    if(test[x]["Location"] == "ในใจ"):
+      fulfillmentText +=' คุณบันทึกสิ่งของไว้พี่ ' + str(test[x]["Location"]) + "  " 
+  return fulfillmentText
 
 # @appBlueprint.route('/webhook', methods=['POST'])
 # def webhook():
