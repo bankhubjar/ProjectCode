@@ -328,10 +328,32 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'showAll..specifyname':
+      NameUser = query_result['outputContexts'][1]["parameters"]["specifyname"]
+      RefNo1 = db.reference("/RememberV2") 
+      get = RefNo1.get()
+      for x in get.keys():
+        if get[x] == NameUser:
+          for y = get[x].keys():
+            fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x][y]["Location"]) + "  "   
+    
+    if query_result.get('action') == 'showAllrequest-no':
       RefNo1 = db.reference("/RememberV2/Home") 
       get = RefNo1.get()
       for x in get.keys():
-        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "      
+        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "
+
+    if query_result.get('action') == 'showAllrequest-no':
+      RefNo1 = db.reference("/RememberV2/Home") 
+      get = RefNo1.get()
+      for x in get.keys():
+        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "
+
+    if query_result.get('action') == 'showAllrequest-no':
+      RefNo1 = db.reference("/RememberV2/Home") 
+      get = RefNo1.get()
+      for x in get.keys():
+        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "
+
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
