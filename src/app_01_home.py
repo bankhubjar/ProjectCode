@@ -8,7 +8,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 import os
-from datetime import date
+from datetime import datetime
 from flask import Flask, render_template, url_for, json
 
 # Fetch the service account key JSON file contents
@@ -226,9 +226,9 @@ def rejectOrder():
     FDB = ref2.get()
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
-    today = date.today()
+    now = datetime.now()
     query_result = req.get('queryResult')
-    d2 = today.strftime("%B %d, %Y")
+    d2 = now.strftime("%d/%m/%Y %H:%M:%S")
     if query_result.get('action') == 'object.confirm':
         NameU = query_result['outputContexts'][4]["parameters"]['name']
         Item = query_result['outputContexts'][4]["parameters"]['objname']
