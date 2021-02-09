@@ -283,7 +283,49 @@ def rejectOrder():
             "fulfillmentText": "Have1",
             "displayText": '25',
             "source": "webhookdata"
-    }            
+    }
+    if query_result.get('action') == 'object.confirm.withUsername':
+       NameUser = query_result['outputContexts'][4]["parameters"]["uname"]
+       Place = query_result['outputContexts'][4]["parameters"]["place"]
+       objname = query_result['outputContexts'][4]["parameters"]["objname"] 
+       RefNoUser = db.reference("/RememberV2") 
+       RefNo1 = RefNoUser.child(""+NameUser)
+       count = 0
+       Deta = RefNo1.get()
+       
+       "today.strftime(%B %d, %Y)"
+       d2 = "EiEi"
+       try:
+          Deta.keys()
+       except: 
+          GoGo = RefNo1.child("รายการที่1")
+          GoGo.set({
+            "amonut":"1"
+            ,"id":count+1
+            ,"item":objname
+            ,"Location":Place
+            ,"time": d2
+         })
+          return {
+            "fulfillmentText": "NoHave",
+            "displayText": '25',
+            "source": "webhookdata"
+    } 
+       else:
+         for key in Deta.keys(): count+= 1
+         GoGo = RefNo1.child("รายการที่"+str(count+1))
+         GoGo.set({
+            "amonut":"1"
+            ,"id":count+1
+            ,"item":objname
+            ,"Location":Place
+            ,"time": d2
+            })
+         return {
+            "fulfillmentText": "Have1",
+            "displayText": '25',
+            "source": "webhookdata"
+    }           
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
