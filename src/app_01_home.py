@@ -334,25 +334,32 @@ def rejectOrder():
       for x in get.keys():
         if get[x] == NameUser:
           for y = get[x].keys():
-            fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x][y]["Location"]) + "  "   
+            fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
     
     if query_result.get('action') == 'showAllrequest-no':
       RefNo1 = db.reference("/RememberV2/Home") 
       get = RefNo1.get()
       for x in get.keys():
-        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "
+        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
 
-    if query_result.get('action') == 'showAllrequest-no':
+    if query_result.get('action') == 'showSpecify.inform':
+      NameUser = query_result['outputContexts'][1]["parameters"]["informname"]["name"]
+      item = query_result['outputContexts'][2]["parameters"]["specifyItemName"]
+      RefNo1 = db.reference("/RememberV2") 
+      get = RefNo1.get()
+      for x in get.keys():
+        if get[x] == NameUser:
+          for y = get[x].keys():
+            if get[x][y]["item"] == item:
+              fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x][y]["Location"]) + "  " 
+
+    if query_result.get('action') == 'specifyItemname.no.inform':
+      item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       RefNo1 = db.reference("/RememberV2/Home") 
       get = RefNo1.get()
       for x in get.keys():
-        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "
-
-    if query_result.get('action') == 'showAllrequest-no':
-      RefNo1 = db.reference("/RememberV2/Home") 
-      get = RefNo1.get()
-      for x in get.keys():
-        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  "
+        if get[x]["item"] == item :
+          fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
 
     return {
             "fulfillmentText": fullfillmentText,
