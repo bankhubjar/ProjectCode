@@ -346,7 +346,7 @@ def rejectOrder():
         fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
 
     if query_result.get('action') == 'showSpecify.inform':
-      NameUser = query_result['outputContexts'][1]["parameters"]["informname"]["name"]
+      NameUser = query_result['outputContexts'][1]["parameters"]["informname"]
       item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       RefNo1 = db.reference("/RememberV2") 
       get = RefNo1.get()
