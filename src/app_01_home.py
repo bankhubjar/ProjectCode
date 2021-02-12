@@ -352,7 +352,7 @@ def rejectOrder():
       get = RefNo1.get()
       for name in get.keys():
         if name == NameUser:
-          for itemlist in get[x].keys():
+          for itemlist in get[name].keys():
             if get[name][itemlist]["item"] == item:
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
 
