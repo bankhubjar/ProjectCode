@@ -1,87 +1,68 @@
 {
-    "responseId": "3d3ca8fc-75af-42a1-b1f2-87f33dfca029-7fe75e93",
+    "responseId": "2fc7b694-427c-497f-9521-14015d3c211c-7fe75e93",
     "queryResult": {
-        "queryText": "ไม่",
-        "action": "object.confirm.noUsername",
-        "parameters": {},
-        "allRequiredParamsPresent": true,
-        "fulfillmentText": "เข้าใจแล้วสิ่งที่บันทึกไว้มี นายก ตำแหน่ง: สภา",
-        "fulfillmentMessages": [{
-            "text": {
-                "text": [
-                    "เข้าใจแล้วสิ่งที่บันทึกไว้มี นายก ตำแหน่ง: สภา"
-                ]
-            }
-        }],
-        "outputContexts": [{
-                "name": "projects/worawit-l9gi/locations/global/agent/sessions/93471ead-3b49-9927-8d65-b626a5f261fc/contexts/objectplace",
-                "lifespanCount": 50,
-                "parameters": {
-                    "place": "สภา",
-                    "place.original": "สภา",
-                    "objname": "นายก",
-                    "objname.original": "นายก"
-                }
+      "queryText": "มาร์ค",
+      "action": "showSpecify.inform",
+      "parameters": {
+        "informname": {
+          "name": "มาร์ค"
+        }
+      },
+      "allRequiredParamsPresent": true,
+      "fulfillmentText": "[Dialogflow Response] : แสดงชื่อของ .... ของคุณ มาร์ค",
+      "fulfillmentMessages": [
+        {
+          "text": {
+            "text": [
+              "[Dialogflow Response] : แสดงชื่อของ .... ของคุณ มาร์ค"
+            ]
+          }
+        }
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/worawit-l9gi/locations/global/agent/sessions/ea8418b1-ddee-db90-ddef-0467267612da/contexts/showspecifyrequest-specifyitemname-yes-followup",
+          "lifespanCount": 1,
+          "parameters": {
+            "informname": {
+              "name": "มาร์ค"
             },
-            {
-                "name": "projects/worawit-l9gi/locations/global/agent/sessions/93471ead-3b49-9927-8d65-b626a5f261fc/contexts/objectname",
-                "lifespanCount": 50,
-                "parameters": {
-                    "objname": "นายก",
-                    "objname.original": "นายก",
-                    "place": "สภา",
-                    "place.original": "สภา"
-                }
-            },
-            {
-                "name": "projects/worawit-l9gi/locations/global/agent/sessions/93471ead-3b49-9927-8d65-b626a5f261fc/contexts/enterusername-no-followup",
-                "lifespanCount": 2
-            },
-            {
-                "name": "projects/worawit-l9gi/locations/global/agent/sessions/93471ead-3b49-9927-8d65-b626a5f261fc/contexts/object-entername1-followup",
-                "parameters": {
-                    "objname": "นายก",
-                    "objname.original": "นายก",
-                    "place": "สภา",
-                    "place.original": "สภา"
-                }
-            },
-            {
-                "name": "projects/worawit-l9gi/locations/global/agent/sessions/93471ead-3b49-9927-8d65-b626a5f261fc/contexts/object-enterplacename-followup",
-                "lifespanCount": 1,
-                "parameters": {
-                    "place": "สภา",
-                    "place.original": "สภา"
-                }
-            },
-            {
-                "name": "projects/worawit-l9gi/locations/global/agent/sessions/93471ead-3b49-9927-8d65-b626a5f261fc/contexts/object-entername-followup",
-                "parameters": {
-                    "objname": "นายก",
-                    "objname.original": "นายก",
-                    "place": "สภา",
-                    "place.original": "สภา"
-                }
-            },
-            {
-                "name": "projects/worawit-l9gi/locations/global/agent/sessions/93471ead-3b49-9927-8d65-b626a5f261fc/contexts/__system_counters__",
-                "parameters": {
-                    "no-input": 0,
-                    "no-match": 0
-                }
-            }
-        ],
-        "intent": {
-            "name": "projects/worawit-l9gi/locations/global/agent/intents/f9d7de78-599d-40c6-a34d-50c33e885d90",
-            "displayName": "enterUsername - no",
-            "endInteraction": true
+            "informname.original": "มาร์ค"
+          }
         },
-        "intentDetectionConfidence": 1,
-        "languageCode": "th"
+        {
+          "name": "projects/worawit-l9gi/locations/global/agent/sessions/ea8418b1-ddee-db90-ddef-0467267612da/contexts/showspecifyrequest-specifyitemname-followup",
+          "parameters": {
+            "specifyItemName": "ระเบิด",
+            "specifyItemName.original": "ระเบิด",
+            "informname": {
+              "name": "มาร์ค"
+            },
+            "informname.original": "มาร์ค"
+          }
+        },
+        {
+          "name": "projects/worawit-l9gi/locations/global/agent/sessions/ea8418b1-ddee-db90-ddef-0467267612da/contexts/__system_counters__",
+          "parameters": {
+            "no-input": 0,
+            "no-match": 0,
+            "informname": {
+              "name": "มาร์ค"
+            },
+            "informname.original": "มาร์ค"
+          }
+        }
+      ],
+      "intent": {
+        "name": "projects/worawit-l9gi/locations/global/agent/intents/760ee8ed-7270-4292-9fcb-708c8debf395",
+        "displayName": "specifyItemname - yes - informname"
+      },
+      "intentDetectionConfidence": 1,
+      "languageCode": "th"
     },
     "originalDetectIntentRequest": {
-        "source": "DIALOGFLOW_CONSOLE",
-        "payload": {}
+      "source": "DIALOGFLOW_CONSOLE",
+      "payload": {}
     },
-    "session": "projects/worawit-l9gi/locations/global/agent/sessions/93471ead-3b49-9927-8d65-b626a5f261fc"
-}
+    "session": "projects/worawit-l9gi/locations/global/agent/sessions/ea8418b1-ddee-db90-ddef-0467267612da"
+  }
