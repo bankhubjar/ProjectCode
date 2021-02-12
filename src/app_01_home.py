@@ -185,14 +185,16 @@ def intentshowAllrequestyesspecifyname():
 
 @appBlueprint.route("/specifyLocation")
 def intentshowAllrequestyesspecifyLocation():
-  ref2 = db.reference("/RememberV2/Home")  
+  ref2 = db.reference("/RememberV2")  
   test = ref2.get()
   NameUser = "มาร์ค"
+  item = "ระเบิด"
   fulfillmentText = ''
   for x in test.keys():
-    if get[x] == NameUser:
+    if x == NameUser:
       for y in test[x].keys():
-        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "  
+        if test[x][y]["item"] == item:
+          fulfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x][y]["Location"]) + "  "  
   return fulfillmentText
 
 # @appBlueprint.route('/webhook', methods=['POST'])
@@ -333,7 +335,7 @@ def rejectOrder():
       RefNo1 = db.reference("/RememberV2") 
       get = RefNo1.get()
       for x in get.keys():
-        if get[x] == NameUser:
+        if x == NameUser:
           for y in get[x].keys():
             fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
     
@@ -349,7 +351,7 @@ def rejectOrder():
       RefNo1 = db.reference("/RememberV2") 
       get = RefNo1.get()
       for x in get.keys():
-        if get[x] == NameUser:
+        if x == NameUser:
           for y in get[x].keys():
             if get[x][y]["item"] == item:
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x][y]["Location"]) + "  " 
