@@ -187,11 +187,12 @@ def intentshowAllrequestyesspecifyname():
 def intentshowAllrequestyesspecifyLocation():
   ref2 = db.reference("/RememberV2/Home")  
   test = ref2.get()
+  NameUser = "มาร์ค"
   fulfillmentText = ''
   for x in test.keys():
-
-    if(test[x]["Location"] == "ในใจ"):
-      fulfillmentText +=' คุณบันทึกสิ่งของไว้พี่ ' + str(test[x]["Location"]) + "  " 
+    if get[x] == NameUser:
+      for y in test[x].keys():
+        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "  
   return fulfillmentText
 
 # @appBlueprint.route('/webhook', methods=['POST'])
@@ -343,7 +344,7 @@ def rejectOrder():
         fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
 
     if query_result.get('action') == 'showSpecify.inform':
-      NameUser = query_result['outputContexts'][1]["parameters"]["informname"]["name"]
+      NameUser = query_result['outputContexts'][2]["parameters"]["informname"]["name"]
       item = query_result['outputContexts'][2]["parameters"]["specifyItemName"]
       RefNo1 = db.reference("/RememberV2") 
       get = RefNo1.get()
