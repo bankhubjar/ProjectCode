@@ -347,6 +347,12 @@ def rejectOrder():
     if query_result.get('action') == 'showAllrequest-no':
       RefNo1 = db.reference("/RememberV2/Home") 
       get = RefNo1.get()
+      ##
+      RefNo2 = db.reference("/ShowHistory")
+      temp = RefNo2.get()
+      RefNo2.update({'showAllrequestNo' :temp['showAllrequestNo'] + 1 })
+
+
       for x in get.keys():
         fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
 
@@ -354,6 +360,11 @@ def rejectOrder():
       NameUser = query_result['outputContexts'][1]["parameters"]["informname"]
       item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       RefNo1 = db.reference("/RememberV2") 
+      ##
+      RefNo2 = db.reference("/ShowHistory")
+      temp = RefNo2.get()
+      RefNo2.update({'showSpecifyInform' :temp['showSpecifyInform'] + 1 })
+
       get = RefNo1.get()
       for name in get.keys():
         if name == NameUser:
@@ -364,6 +375,11 @@ def rejectOrder():
     if query_result.get('action') == 'specifyItemname.no.inform':
       item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       RefNo1 = db.reference("/RememberV2/Home") 
+      ##
+      RefNo2 = db.reference("/ShowHistory")
+      temp = RefNo2.get()
+      RefNo2.update({'specifyItemnameNoInform' :temp['specifyItemnameNoInform'] + 1 })
+
       get = RefNo1.get()
       for x in get.keys():
         if get[x]["item"] == item :
