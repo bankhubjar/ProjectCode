@@ -385,6 +385,27 @@ def rejectOrder():
         if get[x]["item"] == item :
           fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
 
+    if query_result.get('action') == 'showHistory':
+      ref1 = db.reference("/ShowHistory").get()
+      ref2 = db.reference("/RememberV2/Home") 
+      get2 = ref2.get()
+      showallno = 0
+      for x in get2.keys():
+        showallno += 1
+      ref3 = db.reference("/RememberV2")
+      get3 = ref3.get()
+      showall = 0
+      for x in get3.keys():
+        if x != 'Home'
+          for y in get[x].keys():
+            showall += 1
+      fullfillmentText = 'คุณได้บันทึกของที่ไม่มีเจ้าของไป '+showallno
+      +' ครั้ง ,คุณได้บันทึกของที่มีเจ้าของไป '+showall 
+      +' ครั้ง และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+ref1["showAllrequestNo"]
+      +' ครั้ง คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+ref1["showAllspecifyname"]
+      +' ครั้ง คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+ref1["showSpecifyInform"]
+      +' ครั้ง คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+ref1["specifyItemnameNoInform"]
+
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
