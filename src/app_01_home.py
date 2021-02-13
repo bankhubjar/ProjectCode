@@ -337,7 +337,7 @@ def rejectOrder():
       RefNo2 = db.reference("/ShowHistory")
       temp = RefNo2.get()
       RefNo2.update({'showAllspecifyname' :temp['showAllspecifyname'] + 1 })
-      
+
       get = RefNo1.get()
       for x in get.keys():
         if x == NameUser:
