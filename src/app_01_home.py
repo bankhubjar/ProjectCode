@@ -332,13 +332,18 @@ def rejectOrder():
     }
     if query_result.get('action') == 'showAll..specifyname':
       NameUser = query_result['outputContexts'][1]["parameters"]["specifyname"]
-      RefNo1 = db.reference("/RememberV2") 
+      RefNo1 = db.reference("/RememberV2")
+
+      RefNo2 = db.reference("/ShowHistory")
+      temp = RefNo2.get()
+      RefNo2.update({'showAllspecifyname' :temp['showAllspecifyname'] + 1 })
+      
       get = RefNo1.get()
       for x in get.keys():
         if x == NameUser:
           for y in get[x].keys():
             fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
-    
+       
     if query_result.get('action') == 'showAllrequest-no':
       RefNo1 = db.reference("/RememberV2/Home") 
       get = RefNo1.get()
@@ -371,4 +376,19 @@ def rejectOrder():
     }  
 
 
+### Show history
+
+# @appBlueprint.route("/test2")
+# def history():
+#     href = db.reference("/ShowHistory")
+# His = His.child('History')
+# His.set({
+#     'ShowHistory': '1'
+#     ,'Anonymous' :
+#     ,'Specify ' :
+#     ,'ShowSpecify':
+#     ,'ShowAll' :
+# }
+#  return "ควย" 
+# )
 
