@@ -12,4 +12,7 @@
 
 #  s
 
- 
+import json
+
+y = json.load(src/new.json)
+print(y)

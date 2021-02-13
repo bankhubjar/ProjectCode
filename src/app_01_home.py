@@ -96,19 +96,28 @@ def getDBE():
 
 @appBlueprint.route("/test")
 def submit():
-    
-  users_r = ref.child('something')
-  users_r.set({
-        'alanisawesome': {
-        'date_of_birth': 'June 23, 1912',
-        'full_name': 'Alan Turing'
-    },
-    'gracehop': {
-        'date_of_birth': 'December 9, 1906',
-        'full_name': 'Grace Hopper'
-    }
-    })
-  return "helloeiei"
+  ref1 = db.reference("/ShowHistory").get()
+  ref2 = db.reference("/RememberV2/Home") 
+  get2 = ref2.get()
+  showallno = 0
+  for x in get2.keys():
+    showallno += 1
+  ref3 = db.reference("/RememberV2")
+  get3 = ref3.get()
+  showall = 0
+  temp = "Home"
+  for x in get3.keys():
+    if x != temp:
+      for y in get3[x].keys():
+        showall += 1
+  a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
+  b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
+  c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
+  d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
+  e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
+  f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
+  fullfillmentText =a+b+c+d+e+f 
+  return fullfillmentText
 
 @appBlueprint.route("/test1")
 def submiteiei():
@@ -185,13 +194,16 @@ def intentshowAllrequestyesspecifyname():
 
 @appBlueprint.route("/specifyLocation")
 def intentshowAllrequestyesspecifyLocation():
-  ref2 = db.reference("/RememberV2/Home")  
+  ref2 = db.reference("/RememberV2")  
   test = ref2.get()
+  NameUser = "มาร์ค"
+  item = "ระเบิด"
   fulfillmentText = ''
   for x in test.keys():
-
-    if(test[x]["Location"] == "ในใจ"):
-      fulfillmentText +=' คุณบันทึกสิ่งของไว้พี่ ' + str(test[x]["Location"]) + "  " 
+    if x == NameUser:
+      for y in test[x].keys():
+        if test[x][y]["item"] == item:
+          fulfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x][y]["Location"]) + "  "  
   return fulfillmentText
 
 # @appBlueprint.route('/webhook', methods=['POST'])
@@ -329,37 +341,93 @@ def rejectOrder():
     }
     if query_result.get('action') == 'showAll..specifyname':
       NameUser = query_result['outputContexts'][1]["parameters"]["specifyname"]
-      RefNo1 = db.reference("/RememberV2") 
+      RefNo1 = db.reference("/RememberV2")
+
+      RefNo2 = db.reference("/ShowHistory")
+      temp = RefNo2.get()
+      RefNo2.update({'showAllspecifyname' :temp['showAllspecifyname'] + 1 })
+
       get = RefNo1.get()
       for x in get.keys():
+<<<<<<< HEAD
         if get[x] == NameUser:
+=======
+        if x == NameUser:
+>>>>>>> 7ca949e9f3e932de5049fcc9c91adadbea292b2a
           for y in get[x].keys():
             fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
-    
+       
     if query_result.get('action') == 'showAllrequest-no':
       RefNo1 = db.reference("/RememberV2/Home") 
       get = RefNo1.get()
+      ##
+      RefNo2 = db.reference("/ShowHistory")
+      temp = RefNo2.get()
+      RefNo2.update({'showAllrequestNo' :temp['showAllrequestNo'] + 1 })
+
+
       for x in get.keys():
         fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
 
     if query_result.get('action') == 'showSpecify.inform':
-      NameUser = query_result['outputContexts'][1]["parameters"]["informname"]["name"]
-      item = query_result['outputContexts'][2]["parameters"]["specifyItemName"]
+      NameUser = query_result['outputContexts'][1]["parameters"]["informname"]
+      item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       RefNo1 = db.reference("/RememberV2") 
+      ##
+      RefNo2 = db.reference("/ShowHistory")
+      temp = RefNo2.get()
+      RefNo2.update({'showSpecifyInform' :temp['showSpecifyInform'] + 1 })
+
       get = RefNo1.get()
+<<<<<<< HEAD
       for x in get.keys():
         if get[x] == NameUser:
           for y in get[x].keys():
             if get[x][y]["item"] == item:
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x][y]["Location"]) + "  " 
+=======
+      for name in get.keys():
+        if name == NameUser:
+          for itemlist in get[name].keys():
+            if get[name][itemlist]["item"] == item:
+              fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
+>>>>>>> 7ca949e9f3e932de5049fcc9c91adadbea292b2a
 
     if query_result.get('action') == 'specifyItemname.no.inform':
       item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       RefNo1 = db.reference("/RememberV2/Home") 
+      ##
+      RefNo2 = db.reference("/ShowHistory")
+      temp = RefNo2.get()
+      RefNo2.update({'specifyItemnameNoInform' :temp['specifyItemnameNoInform'] + 1 })
+
       get = RefNo1.get()
       for x in get.keys():
         if get[x]["item"] == item :
           fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
+
+    if query_result.get('action') == 'showHistory':
+      ref1 = db.reference("/ShowHistory").get()
+      ref2 = db.reference("/RememberV2/Home") 
+      get2 = ref2.get()
+      showallno = 0
+      for x in get2.keys():
+        showallno += 1
+      ref3 = db.reference("/RememberV2")
+      get3 = ref3.get()
+      showall = 0
+      temp = "Home"
+      for x in get3.keys():
+        if x != temp:
+          for y in get3[x].keys():
+            showall += 1
+      a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
+      b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
+      c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
+      d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
+      e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
+      f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
+      fullfillmentText = a+b+c+d+e+f 
 
     return {
             "fulfillmentText": fullfillmentText,
@@ -368,4 +436,19 @@ def rejectOrder():
     }  
 
 
+### Show history
+
+# @appBlueprint.route("/test2")
+# def history():
+#     href = db.reference("/ShowHistory")
+# His = His.child('History')
+# His.set({
+#     'ShowHistory': '1'
+#     ,'Anonymous' :
+#     ,'Specify ' :
+#     ,'ShowSpecify':
+#     ,'ShowAll' :
+# }
+#  return "ควย" 
+# )
 
