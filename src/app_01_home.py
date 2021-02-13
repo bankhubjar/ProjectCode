@@ -96,19 +96,28 @@ def getDBE():
 
 @appBlueprint.route("/test")
 def submit():
-    
-  users_r = ref.child('something')
-  users_r.set({
-        'alanisawesome': {
-        'date_of_birth': 'June 23, 1912',
-        'full_name': 'Alan Turing'
-    },
-    'gracehop': {
-        'date_of_birth': 'December 9, 1906',
-        'full_name': 'Grace Hopper'
-    }
-    })
-  return "helloeiei"
+  ref1 = db.reference("/ShowHistory").get()
+  ref2 = db.reference("/RememberV2/Home") 
+  get2 = ref2.get()
+  showallno = 0
+  for x in get2.keys():
+    showallno += 1
+  ref3 = db.reference("/RememberV2")
+  get3 = ref3.get()
+  showall = 0
+  temp = "Home"
+  for x in get3.keys():
+    if x != temp:
+      for y in get3[x].keys():
+        showall += 1
+  a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
+  b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
+  c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
+  d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
+  e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
+  f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
+  fullfillmentText =a+b+c+d+e+f 
+  return fullfillmentText
 
 @appBlueprint.route("/test1")
 def submiteiei():
@@ -395,16 +404,18 @@ def rejectOrder():
       ref3 = db.reference("/RememberV2")
       get3 = ref3.get()
       showall = 0
+      temp = "Home"
       for x in get3.keys():
-        if x != 'Home'
-          for y in get[x].keys():
+        if x != temp:
+          for y in get3[x].keys():
             showall += 1
-      fullfillmentText = 'คุณได้บันทึกของที่ไม่มีเจ้าของไป '+showallno
-      +' ครั้ง ,คุณได้บันทึกของที่มีเจ้าของไป '+showall 
-      +' ครั้ง และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+ref1["showAllrequestNo"]
-      +' ครั้ง คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+ref1["showAllspecifyname"]
-      +' ครั้ง คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+ref1["showSpecifyInform"]
-      +' ครั้ง คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+ref1["specifyItemnameNoInform"]
+      a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
+      b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
+      c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
+      d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
+      e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
+      f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
+      fullfillmentText = a+b+c+d+e+f 
 
     return {
             "fulfillmentText": fullfillmentText,
