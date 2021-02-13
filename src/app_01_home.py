@@ -333,7 +333,7 @@ def rejectOrder():
       get = RefNo1.get()
       for x in get.keys():
         if get[x] == NameUser:
-          for y = get[x].keys():
+          for y in get[x].keys():
             fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
     
     if query_result.get('action') == 'showAllrequest-no':
@@ -349,7 +349,7 @@ def rejectOrder():
       get = RefNo1.get()
       for x in get.keys():
         if get[x] == NameUser:
-          for y = get[x].keys():
+          for y in get[x].keys():
             if get[x][y]["item"] == item:
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x][y]["Location"]) + "  " 
 
