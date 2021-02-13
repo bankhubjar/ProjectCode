@@ -27,211 +27,7 @@ firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.
 import json
 appBlueprint = Blueprint("home",__name__)
 
-@appBlueprint.route("/")
-def home():
-     d = '<form action="next">'
-     f =  '<p>Field1 <input type = "text" name = "name" /></p>'
-     o = '<p><input type = "submit" value = "submit" /></p> </form>'
-     z = d+f+o
-     return z
 
-  
-    
-@appBlueprint.route("/next")
-def next():
-    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_url = os.path.join(SITE_ROOT, "", "test.json")
-    data = json.load(open(json_url, encoding="utf8"))
-    ref2 = db.reference("/Remember2")
-    eiei = data['queryResult']
-    NameU = eiei['outputContexts'][2]["parameters"]['name']
-    Item = eiei['outputContexts'][2]["parameters"]['objname']
-    Place = eiei['outputContexts'][2]["parameters"]['place']
-    users_r29 = ref2.child(NameU)
-    users_r29.set({
-        Item: Place
-        
-     })  
-    # nameF = "/"+request.form['name']
-    # ref1 = db.reference("/Remember")
-    # data = ref1.get()
-  #sdasdasdasdsa
-    return "kuy"
-  # def getDB():
-  #   return ref.get()
-#   users_ref = ref.child('something')
-# users_ref.set({
-#     'alanisawesome': {
-#         'date_of_birth': 'June 23, 1912',
-#         'full_name': 'Alan Turing'
-#     },
-#     'gracehop': {
-#         'date_of_birth': 'December 9, 1906',
-#         'full_name': 'Grace Hopper'
-#     }
-#})
-  # result = firebase.get('/restaurants', None)
-  # s = ""
-  # for x  in result:
-  #   s += x["name"]
-  #   s += x["address"]
-  #   s += ", <br>"
-
-  # return str(s)
-
-
-@appBlueprint.route("/getDB")
-def getDBE():
-  RefG = db.reference('/RememberV2/Home')
-  count = 0
-  Deta = RefG.get()
-  eiei = ""
-  for key in Deta.keys(): eiei += key
-  # while 
-  # Data = Deta["Home"]["รายการที่"+ str(count)]
-  
-
-  return eiei
-
-
-@appBlueprint.route("/test")
-def submit():
-  ref1 = db.reference("/ShowHistory").get()
-  ref2 = db.reference("/RememberV2/Home") 
-  get2 = ref2.get()
-  showallno = 0
-  for x in get2.keys():
-    showallno += 1
-  ref3 = db.reference("/RememberV2")
-  get3 = ref3.get()
-  showall = 0
-  temp = "Home"
-  for x in get3.keys():
-    if x != temp:
-      for y in get3[x].keys():
-        showall += 1
-  a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
-  b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
-  c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
-  d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
-  e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
-  f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
-  fullfillmentText =a+b+c+d+e+f 
-  return fullfillmentText
-
-@appBlueprint.route("/test1")
-def submiteiei():
-  ref2 = db.reference("/Remember")  
-  users_r = ref2.child('EiEi')
-  users_r.set({
-        'หนังสือ': {
-        'สถานที่': 'หลังบ้าน'
-    }})
-  return "helloeiei"
-# @appBlueprint.route('/submit', methods=['GET', 'POST'])
-# def submit():
-
-@appBlueprint.route("/HomeUser")    
-def HomeUser():
-       SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-       json_url = os.path.join(SITE_ROOT, "", "new.json")
-       data2 = json.load(open(json_url, encoding="utf8"))
-       data = data2['queryResult']
-       Place = data['outputContexts'][1]["parameters"]["place"]
-       objname = data['outputContexts'][1]["parameters"]["objname"] 
-       RefNo1 = db.reference("/RememberV2/Home") 
-       count = 0
-       Deta = RefNo1.get()
-       
-       d2 = "EiEi"
-       try:
-          Deta.keys()
-       except: 
-          GoGo = RefNo1.child("รายการที่1")
-          GoGo.set({
-            "amonut":"1"
-            ,"id":count+1
-            ,"item":objname
-            ,"Location":Place
-            ,"time": d2
-         })
-          return "ควย"
-       else:
-         for key in Deta.keys(): count+= 1
-         GoGo = RefNo1.child("รายการที่"+str(count+1))
-         GoGo.set({
-            "amonut":"1"
-            ,"id":count+1
-            ,"item":objname
-            ,"Location":Place
-            ,"time": d2
-            })
-         return "ควย" 
-#     name = "Newworld"
-#     address = "NewworldEiEi"
-#     new_data = {"name": name, "address": address}
-#     firebase.post("/restaurants", new_data)
-#     return "Thank you!"
-
-@appBlueprint.route("/nospecifyname")
-def intentshowAllrequestno():
-  ref2 = db.reference("/RememberV2/Home")  
-  test = ref2.get()
-  fulfillmentText = ''
-  for x in test.keys():
-    fulfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x]["Location"]) + "  " 
-  return fulfillmentText
-
-@appBlueprint.route("/specifyitem")
-def intentshowAllrequestyesspecifyname():
-  ref2 = db.reference("/RememberV2/Home")  
-  test = ref2.get()
-  fulfillmentText = ''
-  for x in test.keys():
-    if(test[x]["item"] == "ควย"):
-      fulfillmentText +=' คุณได้บันทึก : '+str(test[x]["item"])+ " ไว้" 
-  return fulfillmentText
-
-@appBlueprint.route("/specifyLocation")
-def intentshowAllrequestyesspecifyLocation():
-  ref2 = db.reference("/RememberV2")  
-  test = ref2.get()
-  NameUser = "มาร์ค"
-  item = "ระเบิด"
-  fulfillmentText = ''
-  for x in test.keys():
-    if x == NameUser:
-      for y in test[x].keys():
-        if test[x][y]["item"] == item:
-          fulfillmentText +=' คุณบันทึกสิ่งของ : '+str(test[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(test[x][y]["Location"]) + "  "  
-  return fulfillmentText
-
-# @appBlueprint.route('/webhook', methods=['POST'])
-# def webhook():
-#   req = request.get_json(silent=True, force=True)
-#   fulfillmentText = ''
-#   sum = 0
-#   query_result = req.get('queryResult')
-#   if query_result.get('action') == 'add.numbers':
-#     num1 = int(query_result.get('parameters').get('number'))
-#     num2 = int(query_result.get('parameters').get('number1'))
-#     sum = str(num1 + num2)
-#     print('here num1 = {0}'.format(num1))
-#     print('here num2 = {0}'.format(num2))
-#     fulfillmentText = 'The sum of the two numbers is '+sum
-#   elif query_result.get('action') == 'multiply.numbers':
-#     num1 = int(query_result.get('parameters').get('number'))
-#     num2 = int(query_result.get('parameters').get('number1'))
-#     product = str(num1 * num2)
-#     print('here num1 = {0}'.format(num1))
-#     print('here num2 = {0}'.format(num2))
-#     fulfillmentText = 'The product of the two numbers is '+product
-#   return {
-#         "fulfillmentText": fulfillmentText,
-#         "displayText": '25',
-#         "source": "webhookdata"
-#     }
-    
 @appBlueprint.route('/webhook',methods=['POST'])
 def rejectOrder():
     ref2 = db.reference("/Remember")  
@@ -257,7 +53,7 @@ def rejectOrder():
         Place = query_result['outputContexts'][3]["parameters"]['place']
         Item2 = FDB[NameU]
         fullfillmentText = 'From Python คุณ'+ str(Item2.keys()[0]) + 'บันทึกสิ่งของ : '+str(Item2.keys()[0])+ ' ไว้ตำแหน่ง ' + str(FDB[NameU][Item]) 
-        # fullfillmentText = "Message form python: เข้าใจแล้ว"
+        
     if query_result.get('action') == 'object.confirm.noUsername':
        
        Place = query_result['outputContexts'][1]["parameters"]["place"]
@@ -279,7 +75,7 @@ def rejectOrder():
             ,"time": d2
          })
           return {
-            "fulfillmentText": "NoHave",
+            "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
     } 
@@ -294,7 +90,7 @@ def rejectOrder():
             ,"time": d2
             })
          return {
-            "fulfillmentText": "Have1",
+            "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
     }
@@ -320,7 +116,7 @@ def rejectOrder():
             ,"time": d2
          })
           return {
-            "fulfillmentText": "NoHave",
+            "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
     } 
@@ -335,7 +131,7 @@ def rejectOrder():
             ,"time": d2
             })
          return {
-            "fulfillmentText": "Have1",
+            "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
     }
@@ -349,11 +145,7 @@ def rejectOrder():
 
       get = RefNo1.get()
       for x in get.keys():
-<<<<<<< HEAD
-        if get[x] == NameUser:
-=======
         if x == NameUser:
->>>>>>> 7ca949e9f3e932de5049fcc9c91adadbea292b2a
           for y in get[x].keys():
             fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
        
@@ -379,19 +171,11 @@ def rejectOrder():
       RefNo2.update({'showSpecifyInform' :temp['showSpecifyInform'] + 1 })
 
       get = RefNo1.get()
-<<<<<<< HEAD
-      for x in get.keys():
-        if get[x] == NameUser:
-          for y in get[x].keys():
-            if get[x][y]["item"] == item:
-              fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x][y]["Location"]) + "  " 
-=======
       for name in get.keys():
         if name == NameUser:
           for itemlist in get[name].keys():
             if get[name][itemlist]["item"] == item:
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
->>>>>>> 7ca949e9f3e932de5049fcc9c91adadbea292b2a
 
     if query_result.get('action') == 'specifyItemname.no.inform':
       item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
@@ -434,21 +218,4 @@ def rejectOrder():
             "displayText": '25',
             "source": "webhookdata"
     }  
-
-
-### Show history
-
-# @appBlueprint.route("/test2")
-# def history():
-#     href = db.reference("/ShowHistory")
-# His = His.child('History')
-# His.set({
-#     'ShowHistory': '1'
-#     ,'Anonymous' :
-#     ,'Specify ' :
-#     ,'ShowSpecify':
-#     ,'ShowAll' :
-# }
-#  return "ควย" 
-# )
 
