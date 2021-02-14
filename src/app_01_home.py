@@ -95,9 +95,9 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'object.confirm.withUsername':
-       NameUser = query_result['outputContexts'][4]["parameters"]["uname"]
-       Place = query_result['outputContexts'][4]["parameters"]["place"]
-       objname = query_result['outputContexts'][4]["parameters"]["objname"] 
+       NameUser = query_result['outputContexts'][3]["parameters"]["uname"]
+       Place = query_result['outputContexts'][3]["parameters"]["place"]
+       objname = query_result['outputContexts'][3]["parameters"]["objname"] 
        RefNoUser = db.reference("/RememberV2") 
        RefNo1 = RefNoUser.child(""+NameUser)
        count = 0
