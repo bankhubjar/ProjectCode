@@ -9,7 +9,9 @@ from firebase_admin import credentials
 from firebase_admin import db
 import os
 from datetime import datetime
+import pytz
 from flask import Flask, render_template, url_for, json
+tz = pytz.timezone('Asia/Bangkok')
 
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate('./src/testproject-9cef3-firebase-adminsdk-1hkji-3cdddd3c46.json')
@@ -32,7 +34,7 @@ appBlueprint = Blueprint("home",__name__)
 def rejectOrder():
     RequestJson = request.get_json(silent=True, force=True)
     fullfillmentText = ''
-    CurrentTime = datetime.now()
+    CurrentTime = datetime.now(tz)
     query_result = RequestJson.get('queryResult')
     DateMonthYear = CurrentTime.strftime("%d/%m/%Y")
     HourMinuteSecond = CurrentTime.strftime("%H:%M:%S")
