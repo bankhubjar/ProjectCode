@@ -77,48 +77,57 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'object.confirm.withUsername':
-       NameUser = query_result['outputContexts'][3]["parameters"]["uname"]
-       Place = query_result['outputContexts'][3]["parameters"]["place"]
-       objname = query_result['outputContexts'][3]["parameters"]["objname"] 
-       RefNoUser = db.reference("/RememberV2") 
-       RefFromDatabase = RefNoUser.child(""+NameUser)
-       count = 0
-       Deta = RefFromDatabase.get()
+      try:
+        if "objname" in query_result:
+          NameUser = query_result['outputContexts'][3]["parameters"]["uname"]
+          Place = query_result['outputContexts'][3]["parameters"]["place"]
+          objname = query_result['outputContexts'][3]["parameters"]["objname"]
+        else:
+          NameUser = query_result['outputContexts'][6]["parameters"]["uname"]
+          Place = query_result['outputContexts'][6]["parameters"]["place"]
+          objname = query_result['outputContexts'][6]["parameters"]["objname"]
        
-       
-       try:
-          Deta.keys()
-       except: 
-          ListToDB = RefFromDatabase.child("รายการที่1")
+        RefNoUser = db.reference("/RememberV2") 
+        RefFromDatabase = RefNoUser.child(""+NameUser)
+        count = 0
+        Deta = RefFromDatabase.get()
+        
+        
+        try:
+            Deta.keys()
+        except: 
+            ListToDB = RefFromDatabase.child("รายการที่1")
+            ListToDB.set({
+              "amonut":"1"
+              ,"id":count+1
+              ,"item":objname
+              ,"Location":Place
+              ,"Date": DateMonthYear
+              ,"time": HourMinuteSecond
+          })
+            return {
+              "fulfillmentText": "บันทึกรายการเรียบร้อย",
+              "displayText": '25',
+              "source": "webhookdata"
+      } 
+        else:
+          for key in Deta.keys(): count+= 1
+          ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
           ListToDB.set({
-            "amonut":"1"
-            ,"id":count+1
-            ,"item":objname
-            ,"Location":Place
-            ,"Date": DateMonthYear
-            ,"time": HourMinuteSecond
-         })
+              "amonut":"1"
+              ,"id":count+1
+              ,"item":objname
+              ,"Location":Place
+              ,"Date": DateMonthYear
+              ,"time": HourMinuteSecond
+              })
           return {
-            "fulfillmentText": "บันทึกรายการเรียบร้อย",
-            "displayText": '25',
-            "source": "webhookdata"
-    } 
-       else:
-         for key in Deta.keys(): count+= 1
-         ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
-         ListToDB.set({
-            "amonut":"1"
-            ,"id":count+1
-            ,"item":objname
-            ,"Location":Place
-            ,"Date": DateMonthYear
-            ,"time": HourMinuteSecond
-            })
-         return {
-            "fulfillmentText": "บันทึกรายการเรียบร้อย",
-            "displayText": '25',
-            "source": "webhookdata"
-    }
+              "fulfillmentText": "บันทึกรายการเรียบร้อย",
+              "displayText": '25',
+              "source": "webhookdata"
+       }
+      except:  
+        fullfillmentText = 'พัง'
     if query_result.get('action') == 'showAll..specifyname':
       try:
         NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
