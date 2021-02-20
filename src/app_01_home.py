@@ -30,29 +30,30 @@ appBlueprint = Blueprint("home",__name__)
 
 @appBlueprint.route('/webhook',methods=['POST'])
 def rejectOrder():
-    req = request.get_json(silent=True, force=True)
+    RequestJson = request.get_json(silent=True, force=True)
     fullfillmentText = ''
-    now = datetime.now()
-    query_result = req.get('queryResult')
-    d2 = now.strftime("%d/%m/%Y %H:%M:%S")
-    if query_result.get('action') == 'object.confirm.noUsername':
-       
+    CurrentTime = datetime.now()
+    query_result = RequestJson.get('queryResult')
+    DateMonthYear = CurrentTime.strftime("%d/%m/%Y")
+    HourMinuteSecond = CurrentTime.strftime("%H:%M:%S")
+    if query_result.get('action') == 'object.confirm.noUsername': 
        Place = query_result['outputContexts'][1]["parameters"]["place"]
        objname = query_result['outputContexts'][1]["parameters"]["objname"] 
-       RefNo1 = db.reference("/RememberV2/Home") 
+       RefFromDatabase = db.reference("/RememberV2/Home") 
        count = 0
-       Deta = RefNo1.get()
+       Deta = RefFromDatabase.get()
 
        try:
           Deta.keys()
        except: 
-          GoGo = RefNo1.child("รายการที่1")
-          GoGo.set({
+          ListToDB = RefFromDatabase.child("รายการที่1")
+          ListToDB.set({
             "amonut":"1"
             ,"id":count+1
             ,"item":objname
             ,"Location":Place
-            ,"time": d2
+            ,"Date": DateMonthYear
+            ,"time": HourMinuteSecond
          })
           return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
@@ -61,13 +62,14 @@ def rejectOrder():
     } 
        else:
          for key in Deta.keys(): count+= 1
-         GoGo = RefNo1.child("รายการที่"+str(count+1))
-         GoGo.set({
+         ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
+         ListToDB.set({
             "amonut":"1"
             ,"id":count+1
             ,"item":objname
             ,"Location":Place
-            ,"time": d2
+            ,"Date": DateMonthYear
+            ,"time": HourMinuteSecond
             })
          return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
@@ -79,21 +81,22 @@ def rejectOrder():
        Place = query_result['outputContexts'][3]["parameters"]["place"]
        objname = query_result['outputContexts'][3]["parameters"]["objname"] 
        RefNoUser = db.reference("/RememberV2") 
-       RefNo1 = RefNoUser.child(""+NameUser)
+       RefFromDatabase = RefNoUser.child(""+NameUser)
        count = 0
-       Deta = RefNo1.get()
+       Deta = RefFromDatabase.get()
        
        
        try:
           Deta.keys()
        except: 
-          GoGo = RefNo1.child("รายการที่1")
-          GoGo.set({
+          ListToDB = RefFromDatabase.child("รายการที่1")
+          ListToDB.set({
             "amonut":"1"
             ,"id":count+1
             ,"item":objname
             ,"Location":Place
-            ,"time": d2
+            ,"Date": DateMonthYear
+            ,"time": HourMinuteSecond
          })
           return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
@@ -102,13 +105,14 @@ def rejectOrder():
     } 
        else:
          for key in Deta.keys(): count+= 1
-         GoGo = RefNo1.child("รายการที่"+str(count+1))
-         GoGo.set({
+         ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
+         ListToDB.set({
             "amonut":"1"
             ,"id":count+1
             ,"item":objname
             ,"Location":Place
-            ,"time": d2
+            ,"Date": DateMonthYear
+            ,"time": HourMinuteSecond
             })
          return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
@@ -116,22 +120,22 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'showAll..specifyname':
-      NameUser = query_result['outputContexts'][1]["parameters"]["specifyname"]
-      RefNo1 = db.reference("/RememberV2")
+      NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
+      RefFromDatabase = db.reference("/RememberV2")
 
       RefNo2 = db.reference("/ShowHistory")
       temp = RefNo2.get()
       RefNo2.update({'showAllspecifyname' :temp['showAllspecifyname'] + 1 })
 
-      get = RefNo1.get()
+      get = RefFromDatabase.get()
       for x in get.keys():
-        if x == NameUser:
+        if x == NameUserser:
           for y in get[x].keys():
             fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
        
     if query_result.get('action') == 'showAllrequest-no':
-      RefNo1 = db.reference("/RememberV2/Home") 
-      get = RefNo1.get()
+      RefFromDatabase = db.reference("/RememberV2/Home") 
+      get = RefFromDatabase.get()
       ##
       RefNo2 = db.reference("/ShowHistory")
       temp = RefNo2.get()
@@ -142,30 +146,30 @@ def rejectOrder():
         fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
 
     if query_result.get('action') == 'showSpecify.inform':
-      NameUser = query_result['outputContexts'][1]["parameters"]["informname"]
+      NameUserser = query_result['outputContexts'][1]["parameters"]["informname"]
       item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
-      RefNo1 = db.reference("/RememberV2") 
+      RefFromDatabase = db.reference("/RememberV2") 
       ##
       RefNo2 = db.reference("/ShowHistory")
       temp = RefNo2.get()
       RefNo2.update({'showSpecifyInform' :temp['showSpecifyInform'] + 1 })
 
-      get = RefNo1.get()
+      get = RefFromDatabase.get()
       for name in get.keys():
-        if name == NameUser:
+        if name == NameUserser:
           for itemlist in get[name].keys():
             if get[name][itemlist]["item"] == item:
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
 
     if query_result.get('action') == 'specifyItemname.no.inform':
       item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
-      RefNo1 = db.reference("/RememberV2/Home") 
+      RefFromDatabase = db.reference("/RememberV2/Home") 
       ##
       RefNo2 = db.reference("/ShowHistory")
       temp = RefNo2.get()
       RefNo2.update({'specifyItemnameNoInform' :temp['specifyItemnameNoInform'] + 1 })
 
-      get = RefNo1.get()
+      get = RefFromDatabase.get()
       for x in get.keys():
         if get[x]["item"] == item :
           fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
