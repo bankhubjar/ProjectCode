@@ -119,9 +119,9 @@ def rejectOrder():
               "source": "webhookdata"
        }
       except:
-        NameUser = query_result['outputContexts'][6]["parameters"]["uname"]
-        Place = query_result['outputContexts'][6]["parameters"]["place"]
-        objname = query_result['outputContexts'][6]["parameters"]["objname"]
+        NameUser = query_result['outputContexts'][8]["parameters"]["uname"]
+        Place = query_result['outputContexts'][8]["parameters"]["place"]
+        objname = query_result['outputContexts'][8]["parameters"]["objname"]
         RefFromDatabase = RefNoUser.child(""+NameUser)
         count = 0
         Deta = RefFromDatabase.get()
