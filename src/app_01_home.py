@@ -30,30 +30,11 @@ appBlueprint = Blueprint("home",__name__)
 
 @appBlueprint.route('/webhook',methods=['POST'])
 def rejectOrder():
-    ref2 = db.reference("/Remember")  
-    FDB = ref2.get()
     req = request.get_json(silent=True, force=True)
     fullfillmentText = ''
     now = datetime.now()
     query_result = req.get('queryResult')
     d2 = now.strftime("%d/%m/%Y %H:%M:%S")
-    if query_result.get('action') == 'object.confirm':
-        NameU = query_result['outputContexts'][4]["parameters"]['name']
-        Item = query_result['outputContexts'][4]["parameters"]['objname']
-        Place = query_result['outputContexts'][4]["parameters"]['place']        
-        users_r29 = ref2.child(NameU)
-        users_r29.set({
-          "ชื่อ":NameU,
-          Item: Place
-        })  
-        fullfillmentText = 'From Python คุณ'+ NameU+ 'บันทึกสิ่งของ : '+Item+ ' ไว้ตำแหน่ง ' + Place
-    if query_result.get('action') == 'object.remember':
-        NameU = query_result['outputContexts'][3]["parameters"]['name']
-        Item = query_result['outputContexts'][3]["parameters"]['objname']
-        Place = query_result['outputContexts'][3]["parameters"]['place']
-        Item2 = FDB[NameU]
-        fullfillmentText = 'From Python คุณ'+ str(Item2.keys()[0]) + 'บันทึกสิ่งของ : '+str(Item2.keys()[0])+ ' ไว้ตำแหน่ง ' + str(FDB[NameU][Item]) 
-        
     if query_result.get('action') == 'object.confirm.noUsername':
        
        Place = query_result['outputContexts'][1]["parameters"]["place"]
