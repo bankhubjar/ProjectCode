@@ -192,28 +192,30 @@ def rejectOrder():
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
 
     if query_result.get('action') == 'showHistory':
-      ref1 = db.reference("/ShowHistory").get()
-      ref2 = db.reference("/RememberV2/Home") 
-      get2 = ref2.get()
-      showallno = 0
-      for x in get2.keys():
-        showallno += 1
-      ref3 = db.reference("/RememberV2")
-      get3 = ref3.get()
-      showall = 0
-      temp = "Home"
-      for x in get3.keys():
-        if x != temp:
-          for y in get3[x].keys():
-            showall += 1
-      a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
-      b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
-      c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
-      d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
-      e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
-      f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
-      fullfillmentText = a+b+c+d+e+f 
-
+      try:
+        ref1 = db.reference("/ShowHistory").get()
+        ref2 = db.reference("/RememberV2/Home") 
+        get2 = ref2.get()
+        showallno = 0
+        for x in get2.keys():
+          showallno += 1
+        ref3 = db.reference("/RememberV2")
+        get3 = ref3.get()
+        showall = 0
+        temp = "Home"
+        for x in get3.keys():
+          if x != temp:
+            for y in get3[x].keys():
+              showall += 1
+        a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
+        b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
+        c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
+        d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
+        e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
+        f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
+        fullfillmentText = a+b+c+d+e+f 
+      except:
+        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
 
