@@ -147,7 +147,7 @@ def rejectOrder():
 
     if query_result.get('action') == 'showSpecify.inform':
       NameUserser = query_result['outputContexts'][1]["parameters"]["informname"]
-      if query_result['outputContexts'][1]["parameters"]["specifyItemName"]:
+      if "specifyItemName" in query_result:
         item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       else:
         item = query_result['outputContexts'][6]["parameters"]["specifyItemName"]
@@ -165,7 +165,7 @@ def rejectOrder():
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
 
     if query_result.get('action') == 'specifyItemname.no.inform':
-      if query_result['outputContexts'][1]["parameters"]["specifyItemName"]:
+      if "specifyItemName" in query_result:
         item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       else:
         item = query_result['outputContexts'][5]["parameters"]["specifyItemName"]
