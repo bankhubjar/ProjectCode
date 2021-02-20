@@ -147,7 +147,10 @@ def rejectOrder():
 
     if query_result.get('action') == 'showSpecify.inform':
       NameUserser = query_result['outputContexts'][1]["parameters"]["informname"]
-      item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
+      if query_result['outputContexts'][1]["parameters"]["specifyItemName"]:
+        item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
+      else:
+        item = query_result['outputContexts'][6]["parameters"]["specifyItemName"]
       RefFromDatabase = db.reference("/RememberV2") 
       ##
       RefNo2 = db.reference("/ShowHistory")
@@ -162,7 +165,10 @@ def rejectOrder():
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
 
     if query_result.get('action') == 'specifyItemname.no.inform':
-      item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
+      if query_result['outputContexts'][1]["parameters"]["specifyItemName"]:
+        item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
+      else:
+        item = query_result['outputContexts'][5]["parameters"]["specifyItemName"]
       RefFromDatabase = db.reference("/RememberV2/Home") 
       ##
       RefNo2 = db.reference("/ShowHistory")
