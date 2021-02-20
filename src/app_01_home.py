@@ -120,65 +120,76 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'showAll..specifyname':
-      NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
-      RefFromDatabase = db.reference("/RememberV2")
+      try:
+        NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
+        RefFromDatabase = db.reference("/RememberV2")
 
-      RefNo2 = db.reference("/ShowHistory")
-      temp = RefNo2.get()
-      RefNo2.update({'showAllspecifyname' :temp['showAllspecifyname'] + 1 })
+        RefNo2 = db.reference("/ShowHistory")
+        temp = RefNo2.get()
+        RefNo2.update({'showAllspecifyname' :temp['showAllspecifyname'] + 1 })
 
-      get = RefFromDatabase.get()
-      for x in get.keys():
-        if x == NameUserser:
-          for y in get[x].keys():
-            fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
-       
+        get = RefFromDatabase.get()
+        for x in get.keys():
+          if x == NameUserser:
+            for y in get[x].keys():
+              fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
+      except:
+        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
+
     if query_result.get('action') == 'showAllrequest-no':
-      RefFromDatabase = db.reference("/RememberV2/Home") 
-      get = RefFromDatabase.get()
-      ##
-      RefNo2 = db.reference("/ShowHistory")
-      temp = RefNo2.get()
-      RefNo2.update({'showAllrequestNo' :temp['showAllrequestNo'] + 1 })
+      try:
+        RefFromDatabase = db.reference("/RememberV2/Home") 
+        get = RefFromDatabase.get()
+        ##
+        RefNo2 = db.reference("/ShowHistory")
+        temp = RefNo2.get()
+        RefNo2.update({'showAllrequestNo' :temp['showAllrequestNo'] + 1 })
 
-
-      for x in get.keys():
-        fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
+        for x in get.keys():
+          fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
+      except:
+        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
 
     if query_result.get('action') == 'showSpecify.inform':
-      NameUserser = query_result['outputContexts'][1]["parameters"]["informname"]
-      if "specifyItemName" in query_result:
-        item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
-      else:
-        item = query_result['outputContexts'][6]["parameters"]["specifyItemName"]
-      RefFromDatabase = db.reference("/RememberV2") 
-      ##
-      RefNo2 = db.reference("/ShowHistory")
-      temp = RefNo2.get()
-      RefNo2.update({'showSpecifyInform' :temp['showSpecifyInform'] + 1 })
+      try:
+        NameUserser = query_result['outputContexts'][1]["parameters"]["informname"]
+        if "specifyItemName" in query_result:
+          item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
+       else:
+          item = query_result['outputContexts'][6]["parameters"]["specifyItemName"]
+        RefFromDatabase = db.reference("/RememberV2") 
+        ##
+        RefNo2 = db.reference("/ShowHistory")
+        temp = RefNo2.get()
+        RefNo2.update({'showSpecifyInform' :temp['showSpecifyInform'] + 1 })
 
-      get = RefFromDatabase.get()
-      for name in get.keys():
-        if name == NameUserser:
-          for itemlist in get[name].keys():
-            if get[name][itemlist]["item"] == item:
-              fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
+        get = RefFromDatabase.get()
+        for name in get.keys():
+          if name == NameUserser:
+            for itemlist in get[name].keys():
+              if get[name][itemlist]["item"] == item:
+                fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
+      except:
+        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
 
     if query_result.get('action') == 'specifyItemname.no.inform':
-      if "specifyItemName" in query_result:
-        item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
-      else:
-        item = query_result['outputContexts'][5]["parameters"]["specifyItemName"]
-      RefFromDatabase = db.reference("/RememberV2/Home") 
-      ##
-      RefNo2 = db.reference("/ShowHistory")
-      temp = RefNo2.get()
-      RefNo2.update({'specifyItemnameNoInform' :temp['specifyItemnameNoInform'] + 1 })
+      try:
+        if "specifyItemName" in query_result:
+          item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
+        else:
+          item = query_result['outputContexts'][5]["parameters"]["specifyItemName"]
+        RefFromDatabase = db.reference("/RememberV2/Home") 
+        ##
+        RefNo2 = db.reference("/ShowHistory")
+        temp = RefNo2.get()
+        RefNo2.update({'specifyItemnameNoInform' :temp['specifyItemnameNoInform'] + 1 })
 
-      get = RefFromDatabase.get()
-      for x in get.keys():
-        if get[x]["item"] == item :
-          fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
+        get = RefFromDatabase.get()
+        for x in get.keys():
+          if get[x]["item"] == item :
+            fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
+      except:
+        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
 
     if query_result.get('action') == 'showHistory':
       ref1 = db.reference("/ShowHistory").get()
