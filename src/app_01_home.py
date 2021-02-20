@@ -62,8 +62,7 @@ def rejectOrder():
        RefNo1 = db.reference("/RememberV2/Home") 
        count = 0
        Deta = RefNo1.get()
-       
-       
+
        try:
           Deta.keys()
        except: 
@@ -217,6 +216,9 @@ def rejectOrder():
       e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
       f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
       fullfillmentText = a+b+c+d+e+f 
+
+    if fullfillmentText == '':
+      fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
 
     return {
             "fulfillmentText": fullfillmentText,
