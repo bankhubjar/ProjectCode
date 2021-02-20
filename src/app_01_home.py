@@ -31,28 +31,29 @@ appBlueprint = Blueprint("home",__name__)
 @appBlueprint.route('/webhook',methods=['POST'])
 def rejectOrder():
     ref2 = db.reference("/Remember")  
-    FDB = ref2.get()
-    req = request.get_json(silent=True, force=True)
+    FirebaseDataBase = ref2.get()
+    RequestJson = request.get_json(silent=True, force=True)
     fullfillmentText = ''
-    now = datetime.now()
-    query_result = req.get('queryResult')
-    d2 = now.strftime("%d/%m/%Y %H:%M:%S")
+    CurrentTime = datetime.now()
+    query_result = RequestJson.get('queryResult')
+    DateMonthYear = CurrentTime.strftime("%d/%m/%Y")
+    HourMinuteSecond = CurrentTime.strftime("%H:%M:%S")
     if query_result.get('action') == 'object.confirm':
-        NameU = query_result['outputContexts'][4]["parameters"]['name']
+        NameUser = query_result['outputContexts'][4]["parameters"]['name']
         Item = query_result['outputContexts'][4]["parameters"]['objname']
         Place = query_result['outputContexts'][4]["parameters"]['place']        
-        users_r29 = ref2.child(NameU)
+        users_r29 = ref2.child(NameUser)
         users_r29.set({
-          "ชื่อ":NameU,
+          "ชื่อ":NameUser,
           Item: Place
         })  
-        fullfillmentText = 'From Python คุณ'+ NameU+ 'บันทึกสิ่งของ : '+Item+ ' ไว้ตำแหน่ง ' + Place
+        fullfillmentText = 'From Python คุณ'+ NameUser+ 'บันทึกสิ่งของ : '+Item+ ' ไว้ตำแหน่ง ' + Place
     if query_result.get('action') == 'object.remember':
-        NameU = query_result['outputContexts'][3]["parameters"]['name']
+        NameUser = query_result['outputContexts'][3]["parameters"]['name']
         Item = query_result['outputContexts'][3]["parameters"]['objname']
         Place = query_result['outputContexts'][3]["parameters"]['place']
-        Item2 = FDB[NameU]
-        fullfillmentText = 'From Python คุณ'+ str(Item2.keys()[0]) + 'บันทึกสิ่งของ : '+str(Item2.keys()[0])+ ' ไว้ตำแหน่ง ' + str(FDB[NameU][Item]) 
+        Item2 = FirebaseDataBase[NameUser]
+        fullfillmentText = 'From Python คุณ'+ str(Item2.keys()[0]) + 'บันทึกสิ่งของ : '+str(Item2.keys()[0])+ ' ไว้ตำแหน่ง ' + str(FirebaseDataBase[NameUser][Item]) 
         
     if query_result.get('action') == 'object.confirm.noUsername':
        
@@ -72,7 +73,8 @@ def rejectOrder():
             ,"id":count+1
             ,"item":objname
             ,"Location":Place
-            ,"time": d2
+            ,"Date": DateMonthYear
+            ,"time": HourMinuteSecond
          })
           return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
@@ -87,7 +89,8 @@ def rejectOrder():
             ,"id":count+1
             ,"item":objname
             ,"Location":Place
-            ,"time": d2
+            ,"Date": DateMonthYear
+            ,"time": HourMinuteSecond
             })
          return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
@@ -113,7 +116,8 @@ def rejectOrder():
             ,"id":count+1
             ,"item":objname
             ,"Location":Place
-            ,"time": d2
+            ,"Date": DateMonthYear
+            ,"time": HourMinuteSecond
          })
           return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
@@ -128,7 +132,8 @@ def rejectOrder():
             ,"id":count+1
             ,"item":objname
             ,"Location":Place
-            ,"time": d2
+            ,"Date": DateMonthYear
+            ,"time": HourMinuteSecond
             })
          return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
@@ -136,7 +141,7 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'showAll..specifyname':
-      NameUser = query_result['outputContexts'][1]["parameters"]["specifyname"]
+      NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
       RefNo1 = db.reference("/RememberV2")
 
       RefNo2 = db.reference("/ShowHistory")
@@ -145,7 +150,7 @@ def rejectOrder():
 
       get = RefNo1.get()
       for x in get.keys():
-        if x == NameUser:
+        if x == NameUserser:
           for y in get[x].keys():
             fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
        
@@ -162,7 +167,7 @@ def rejectOrder():
         fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
 
     if query_result.get('action') == 'showSpecify.inform':
-      NameUser = query_result['outputContexts'][1]["parameters"]["informname"]
+      NameUserser = query_result['outputContexts'][1]["parameters"]["informname"]
       item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
       RefNo1 = db.reference("/RememberV2") 
       ##
@@ -172,7 +177,7 @@ def rejectOrder():
 
       get = RefNo1.get()
       for name in get.keys():
-        if name == NameUser:
+        if name == NameUserser:
           for itemlist in get[name].keys():
             if get[name][itemlist]["item"] == item:
               fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
