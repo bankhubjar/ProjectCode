@@ -48,7 +48,11 @@ appBlueprint = Blueprint("home",__name__)
 
 @appBlueprint.route('/test2')
 def testcheck2():
-    return testcheck("2021-02-28T15:00:00+07:00","2021-02-28T17:00:00+07:00")
+    data =''
+    with open("./src/message.json", errors='ignore') as read_file:
+       data = json.load(read_file)
+    # query_result['parameters'][1]['showreminderdate']
+    return data["queryResult"]['parameters']['showreminderdate'][0]
 
 def testcheck(mintimeformDialog,maxtimeformDialog):
     ful = ''
@@ -514,7 +518,7 @@ def rejectOrder():
             "source": "webhookdata"
       } 
     if query_result.get('action') == 'showReminder.Date':
-      datefromdialog =  query_result['parameters'][1]['showreminderdate']
+      datefromdialog =  query_result['parameters']['showreminderdate'][0]
       return {
         "fulfillmentText": testcheck(datefromdialog,""),
         "displayText": '50',
