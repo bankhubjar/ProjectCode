@@ -215,7 +215,15 @@ def rejectOrder():
               "fulfillmentText": "บันทึกรายการเรียบร้อย",
               "displayText": '25',
               "source": "webhookdata"
-       }          
+       } 
+
+    if query_result.get('action') == 'Reminder-TIme':
+      return {
+              "fulfillmentText": "ได้รับfulfillmentText",
+              "displayText": '25',
+              "source": "webhookdata"
+       } 
+             
     if query_result.get('action') == 'showAll..specifyname':
       try:
         NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
