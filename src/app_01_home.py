@@ -500,11 +500,11 @@ def rejectOrder():
          fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
        else:
          for x in getEvent.keys():
-           fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
+           fullfillmentText='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
        return fullfillmentText    
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
             "source": "webhookdata"
-    }  
+      }  
 
