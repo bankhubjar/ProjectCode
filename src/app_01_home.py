@@ -218,11 +218,31 @@ def rejectOrder():
        } 
 
     if query_result.get('action') == 'Reminder-TIme':
-      return {
-              "fulfillmentText": "ได้รับfulfillmentText",
-              "displayText": '25',
-              "source": "webhookdata"
-       } 
+      event = query_result['outputContexts'][0]["parameters"]["any"]
+      time = query_result['outputContexts'][0]["parameters"]["time"]
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time
+      RefFromDatabase = db.reference("/EventReminder") 
+      count = 0
+      Data = RefFromDatabase.get()
+      try:
+        Data.keys()
+      except:
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
+        ListToDb.set({"id":count+1,"event":event,"date":time})
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        }
+      else:
+        for key in Data.keys(): count += 1
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
+        ListToDb.set({"id":count+1,"event":event,"date":time})
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        }
              
     if query_result.get('action') == 'showAll..specifyname':
       try:
