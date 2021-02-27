@@ -501,10 +501,10 @@ def rejectOrder():
        else:
          for x in getEvent.keys():
            fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
-       return fullfillmentText     
+       return fullfillmentText    
     return {
             "fulfillmentText": fullfillmentText,
-            "displayText": '25',
+            "displayText": '50',
             "source": "webhookdata"
     }  
 
