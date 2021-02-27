@@ -135,9 +135,6 @@ def callCa(service):
 @appBlueprint.route('/calendar')
 def calendar():
     creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
@@ -154,7 +151,6 @@ def calendar():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-<<<<<<< HEAD
     result = service.calendarList().list().execute()
     calendar_id = result['items'][0]['id']
     # Call the Calendar API
@@ -182,13 +178,6 @@ def calendar():
       }
     service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
     return "sent event to "+calendar_id
-=======
-    return service
-
-    # Call the Calendar API
-    result = service.calendarList().list().execute()
-    return result
->>>>>>> 281630d9f0a8a0b26f9c8ab3ea9145fdf18e03a8
 
 @appBlueprint.route('/webhook',methods=['POST'])
 def rejectOrder():
@@ -302,7 +291,6 @@ def rejectOrder():
               "fulfillmentText": "บันทึกรายการเรียบร้อย",
               "displayText": '25',
               "source": "webhookdata"
-<<<<<<< HEAD
        } 
 
     if query_result.get('action') == 'Reminder-TIme':
@@ -359,9 +347,6 @@ def rejectOrder():
           "source": "webhookdata"
         }
              
-=======
-       }      
->>>>>>> 281630d9f0a8a0b26f9c8ab3ea9145fdf18e03a8
     if query_result.get('action') == 'showAll..specifyname':
       try:
         NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
