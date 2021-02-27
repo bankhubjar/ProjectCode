@@ -301,16 +301,17 @@ def rejectOrder():
       fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
+      time_zone = 'Asia/Bangkok'
       eventcontent = {
         'summary': event,
         'description': event,
         'start': {
           'dateTime': datetimeq,
-          'timeZone': tz,
+          'timeZone': time_zone,
         },
         'end': {
           'dateTime': datetimeq,
-          'timeZone': tz,
+          'timeZone': time_zone,
         },
         'reminders': {
           'useDefault': False,
