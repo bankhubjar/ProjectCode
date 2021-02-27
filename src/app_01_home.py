@@ -339,10 +339,10 @@ def rejectOrder():
       event = query_result['outputContexts'][0]["parameters"]["any"]
       datetimeq = query_result['outputContexts'][0]["parameters"]["datetime"]
       date = datetimeq.split("T")[0]
-      time = datetimeq.split("T")[1]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
+      time = datetimeq.split("T")[1].split("+")[0]
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/EventReminder") 
-      count = 0
+      count = 1
       time_zone = 'Asia/Bangkok'
       eventcontent = {
         'summary': event,
@@ -368,7 +368,7 @@ def rejectOrder():
         Data.keys()
       except:
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
-        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
+        ListToDb.set({"id":count,"event":event,"date":date,"time":time})
         ##      
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
@@ -380,7 +380,7 @@ def rejectOrder():
       else:
         for key in Data.keys(): count += 1
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
-        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
+        ListToDb.set({"id":count,"event":event,"date":date,"time":time})
         ##
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
