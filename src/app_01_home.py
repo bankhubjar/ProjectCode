@@ -87,7 +87,6 @@ def checkJson(data):
         NameUser = data['outputContexts'][ides]["parameters"]["uname"]
         Place = data['outputContexts'][ides]["parameters"]["place"]
         objname = data['outputContexts'][ides]["parameters"]["objname"]
-        ful = NameUser + Place + objname
         break
     return ides
 
@@ -192,9 +191,9 @@ def rejectOrder():
     }
     if query_result.get('action') == 'object.confirm.withUsername':
         RefNoUser = db.reference("/RememberV2")
-        NameUser = query_result['outputContexts'][getCalendar(query_result)]["parameters"]["uname"]
-        Place = query_result['outputContexts'][getCalendar(query_result)]["parameters"]["place"]
-        objname = query_result['outputContexts'][getCalendar(query_result)]["parameters"]["objname"]
+        NameUser = query_result['outputContexts'][checkJson(query_result)]["parameters"]["uname"]
+        Place = query_result['outputContexts'][checkJson(query_result)]["parameters"]["place"]
+        objname = query_result['outputContexts'][checkJson(query_result)]["parameters"]["objname"]
         RefFromDatabase = RefNoUser.child(""+NameUser)
         count = 0
         Deta = RefFromDatabase.get()
@@ -230,107 +229,7 @@ def rejectOrder():
               "fulfillmentText": "บันทึกรายการเรียบร้อย",
               "displayText": '25',
               "source": "webhookdata"
-       }
-<<<<<<< HEAD
-      
-=======
-      except:
-        NameUser = query_result['outputContexts'][8]["parameters"]["uname"]
-        Place = query_result['outputContexts'][8]["parameters"]["place"]
-        objname = query_result['outputContexts'][8]["parameters"]["objname"]
-        RefFromDatabase = RefNoUser.child(""+NameUser)
-        count = 0
-        Deta = RefFromDatabase.get()
-        try:
-            Deta.keys()
-        except: 
-            ListToDB = RefFromDatabase.child("รายการที่1")
-            ListToDB.set({
-              "amonut":"1"
-              ,"id":count+1
-              ,"item":objname
-              ,"Location":Place
-              ,"Date": DateMonthYear
-              ,"time": HourMinuteSecond
-          })
-            return {
-              "fulfillmentText": "บันทึกรายการเรียบร้อย",
-              "displayText": '25',
-              "source": "webhookdata"
-      } 
-        else:
-          for key in Deta.keys(): count+= 1
-          ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
-          ListToDB.set({
-              "amonut":"1"
-              ,"id":count+1
-              ,"item":objname
-              ,"Location":Place
-              ,"Date": DateMonthYear
-              ,"time": HourMinuteSecond
-              })
-          return {
-              "fulfillmentText": "บันทึกรายการเรียบร้อย",
-              "displayText": '25',
-              "source": "webhookdata"
-       } 
-
-    if query_result.get('action') == 'Reminder-TIme':
-      event = query_result['outputContexts'][0]["parameters"]["any"]
-      datetime = query_result['outputContexts'][0]["parameters"]["time"]
-      date = datetime.split("T")[0]
-      time = datetime.split("T")[1]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
-      RefFromDatabase = db.reference("/EventReminder") 
-      count = 0
-      eventcontent = {
-        'summary': event,
-        'location': '',
-        'description': '',
-        'start': {
-          'dateTime': datetime,
-          'timeZone': tz,
-        },
-        'end': {
-          'dateTime': datetime,
-          'timeZone': tz,
-        },
-        'reminders': {
-          'useDefault': False,
-          'overrides': [
-            {'method': 'email', 'minutes': 24 * 60},
-            {'method': 'popup', 'minutes': 10},
-          ],
-        },
-      }
-      Data = RefFromDatabase.get()
-      try:
-        Data.keys()
-      except:
-        ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
-        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
-        ##      
-        service.events().insert(credentials=creds, body=eventcontent).execute()
-        ##
-        return {
-          "fulfillmentText": fulfillmentText,
-          "displayText": '25',
-          "source": "webhookdata"
-        }
-      else:
-        for key in Data.keys(): count += 1
-        ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
-        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
-        ##
-        service.events().insert(credentials=creds, body=eventcontent).execute()
-        ##
-        return {
-          "fulfillmentText": fulfillmentText,
-          "displayText": '25',
-          "source": "webhookdata"
-        }
-             
->>>>>>> f4394758895eda80942c624f8ca5253bfab5b638
+       }      
     if query_result.get('action') == 'showAll..specifyname':
       try:
         NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
@@ -430,10 +329,6 @@ def rejectOrder():
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
-
-
-    if query_result.get('action') == 'showReminder':
-      fullfillmentText = getCalendar(logintoCalenda())  
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
