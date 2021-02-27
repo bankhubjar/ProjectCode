@@ -46,12 +46,15 @@ firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.
 import json
 appBlueprint = Blueprint("home",__name__)
 
+@appBlueprint.route('/test2')
+def testcheck2():
+    return testcheck("2021-02-28T15:00:00+07:00","2021-02-28T17:00:00+07:00")
 
-
-def testcheck():
+def testcheck(mintimeformDialog,maxtimeformDialog):
     ful = ''
     i = 0
     start =[]
+    now = ''
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -75,12 +78,17 @@ def testcheck():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-
-    # Call the Calendar API
-    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
+    if not mintimeformDialog:
+      now = datetime.utcnow().isoformat() + 'Z'   
+    else:
+      now = mintimeformDialog
+    if not maxtimeformDialog:
+      events_result = service.events().list(calendarId='primary', timeMin=now,
                                         maxResults=10, singleEvents=True,
+                                        orderBy='startTime').execute()
+    else:    
+      events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        timeMax=maxtimeformDialog,maxResults=10, singleEvents=True,
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
 
@@ -501,10 +509,17 @@ def rejectOrder():
       #    for x in getEvent.keys():
       #      fullfillmentText='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
        return {
-            "fulfillmentText": testcheck(),
+            "fulfillmentText": testcheck("",""),
             "displayText": '50',
             "source": "webhookdata"
-      }    
+      } 
+    if query_result.get('action') == 'showReminder.Date':
+      datefromdialog =  query_result['parameters']['showreminderdate']
+      return {
+        "fulfillmentText": testcheck(datefromdialog,""),
+        "displayText": '50',
+        "source": "webhookdata"
+      }
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
