@@ -489,7 +489,7 @@ def rejectOrder():
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
-    if query_result.get('action') == 'showReminderALL':
+    if query_result.get('action') == 'showReminder.All':
        RefEvent = db.reference("/EventReminder")
        getEvent = RefEvent.get()
        Event = []
