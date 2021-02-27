@@ -50,27 +50,56 @@ appBlueprint = Blueprint("home",__name__)
 @appBlueprint.route('/test2')
 def testcheck():
     ful = ''
-    data = ''
-    kiki = 0
-    ides = 0
-    with open("./src/message.json", encoding='utf-8', errors='ignore') as json_data:
-      data  = json.load(json_data)
-      data = data['queryResult']
-    while ides < len(data['outputContexts']):
-      try:
-        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
-        Place = data['outputContexts'][ides]["parameters"]["place"]
-        objname = data['outputContexts'][ides]["parameters"]["objname"]        
-      except:
-        kiki+= 1
-        ides+=1
-      else:
-        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
-        Place = data['outputContexts'][ides]["parameters"]["place"]
-        objname = data['outputContexts'][ides]["parameters"]["objname"]
-        ful = NameUser + Place + objname
-        break
-    return str(kiki) +" "+ful  
+    i = 0
+    start =[]
+    """Shows basic usage of the Google Calendar API.
+    Prints the start and name of the next 10 events on the user's calendar.
+    """
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+
+    # Call the Calendar API
+    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    print('Getting the upcoming 10 events')
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        maxResults=10, singleEvents=True,
+                                        orderBy='startTime').execute()
+    events = events_result.get('items', [])
+
+    if not events:
+        start[0] ='No upcoming events found.'
+    for event in events:
+        eiei = event['start'].get('dateTime', event['start'].get('date'))
+        start.append(eiei+''+event['summary'])
+    while i > len(start):
+      ful += start[i]
+      i+=1     
+    return ful
+      # i = 0 
+      # fullfillmentText = 'eiei'
+
+      # calendarArray = callCa(checkService())
+      # while i > 3:
+      #    fullfillmentText += calendarArray[i]
+        #  i+=1
         
 def checkJson(data):
     kiki = 0
@@ -116,21 +145,34 @@ def checkService():
 def callCa(service):
     count = 0
     start = []
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    text = ''
+    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                        maxResults=10, singleEvents=True,
-                                        orderBy='startTime').execute()
+    events_result = service.events().list(calendarId='primary', timeMin=now,maxResults=10, singleEvents=True,orderBy='startTime').execute()
     events = events_result.get('items', [])
 
     if not events:
         start[0]='No upcoming events found.'
     for event in events:
-        start[count] = event['start'].get('dateTime', event['start'].get('date'))
-        count += 1
+        text = str(event['start'].get('dateTime', event['start'].get('date')))
+        start.append(text+''+str(event['summary'])) 
     return start    
 
-
+@appBlueprint.route('/test1')
+def wtf():
+       fullfillmentText=''
+       RefEvent = db.reference("/EventReminder")
+       getEvent = RefEvent.get()
+       Event = []
+       a=''
+       try:
+        getEvent.keys()
+       except:
+         fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
+       else:
+         for x in getEvent.keys():
+           fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
+       return fullfillmentText
 
 @appBlueprint.route('/calendar')
 def calendar():
@@ -154,7 +196,7 @@ def calendar():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-    return service
+    
 
     # Call the Calendar API
     result = service.calendarList().list().execute()
@@ -371,13 +413,18 @@ def rejectOrder():
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
     if query_result.get('action') == 'showReminder':
-       i = 0 
-       fullfillmentText = ''
-       calendarArray = callCa(checkService)
-       while i > 3:
-         fullfillmentText += calendarArray[i]
-         i+=1
-        
+       RefEvent = db.reference("/EventReminder")
+       getEvent = RefEvent.get()
+       Event = []
+       a=''
+       try:
+        getEvent.keys()
+       except:
+         fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
+       else:
+         for x in getEvent.keys():
+           fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
+       return fullfillmentText     
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
