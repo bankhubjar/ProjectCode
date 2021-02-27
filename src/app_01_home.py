@@ -90,7 +90,7 @@ def testcheck():
         eiei = event['start'].get('dateTime', event['start'].get('date'))
         start.append('การแจ้งเตือนของคุณมี '+event['summary']+' ตอน '+str(eiei.split("T")[0])+' เวลา '+str(eiei.split("T")[1].split("+")[0])+'')
     for x in start:
-      ful += x+'<br>' 
+      ful += x 
     return str(ful)
       # i = 0 
       # fullfillmentText = 'eiei'
@@ -500,7 +500,11 @@ def rejectOrder():
       #  else:
       #    for x in getEvent.keys():
       #      fullfillmentText='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
-       return testcheck()    
+       return {
+            "fulfillmentText": testcheck(),
+            "displayText": '50',
+            "source": "webhookdata"
+      }    
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
