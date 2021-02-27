@@ -89,10 +89,9 @@ def testcheck():
     for event in events:
         eiei = event['start'].get('dateTime', event['start'].get('date'))
         start.append(eiei+''+event['summary'])
-    while i > len(start):
-      ful += start[i]
-      i+=1     
-    return ful
+    for x in start:
+      ful += x  
+    return str(ful)
       # i = 0 
       # fullfillmentText = 'eiei'
 
