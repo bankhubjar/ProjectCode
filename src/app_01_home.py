@@ -90,6 +90,47 @@ def checkJson(data):
         break
     return ides
 
+def checkService():
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+        service = build('calendar', 'v3', credentials=creds)
+        return service
+
+def callCa(service):
+    count = 0
+    start = []
+    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    print('Getting the upcoming 10 events')
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        maxResults=10, singleEvents=True,
+                                        orderBy='startTime').execute()
+    events = events_result.get('items', [])
+
+    if not events:
+        start[0]='No upcoming events found.'
+    for event in events:
+        start[count] = event['start'].get('dateTime', event['start'].get('date'))
+        count += 1
+    return start    
+
+
 
 @appBlueprint.route('/calendar')
 def calendar():
@@ -329,6 +370,14 @@ def rejectOrder():
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
+    if query_result.get('action') == 'showReminder':
+       i = 0 
+       fullfillmentText = ''
+       calendarArray = callCa(checkService)
+       while i > 3:
+         fullfillmentText += calendarArray[i]
+         i+=1
+        
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
