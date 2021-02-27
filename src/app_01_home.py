@@ -335,7 +335,7 @@ def rejectOrder():
               "source": "webhookdata"
        } 
 
-    if query_result.get('action') == 'Reminder-TIme':
+    if query_result.get('action') == 'reminder.Time':
       event = query_result['outputContexts'][0]["parameters"]["any"]
       datetimeq = query_result['outputContexts'][0]["parameters"]["time"]
       date = datetimeq.split("T")[0]
