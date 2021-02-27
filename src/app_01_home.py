@@ -47,7 +47,7 @@ import json
 appBlueprint = Blueprint("home",__name__)
 
 
-@appBlueprint.route('/test2')
+
 def testcheck():
     ful = ''
     i = 0
@@ -88,9 +88,9 @@ def testcheck():
         start[0] ='No upcoming events found.'
     for event in events:
         eiei = event['start'].get('dateTime', event['start'].get('date'))
-        start.append(eiei+''+event['summary'])
+        start.append('การแจ้งเตือนของคุณมี '+event['summary']+' ตอน '+str(eiei.split("T")[0])+' เวลา '+str(eiei.split("T")[1].split("+")[0])+'')
     for x in start:
-      ful += x  
+      ful += x+'<br>' 
     return str(ful)
       # i = 0 
       # fullfillmentText = 'eiei'
@@ -338,10 +338,10 @@ def rejectOrder():
       event = query_result['outputContexts'][0]["parameters"]["any"]
       datetimeq = query_result['outputContexts'][0]["parameters"]["datetime"]
       date = datetimeq.split("T")[0]
-      time = datetimeq.split("T")[1].split("+")[0]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
+      time = datetimeq.split("T")[1]
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
       RefFromDatabase = db.reference("/EventReminder") 
-      count = 1
+      count = 0
       time_zone = 'Asia/Bangkok'
       eventcontent = {
         'summary': event,
@@ -367,7 +367,7 @@ def rejectOrder():
         Data.keys()
       except:
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
-        ListToDb.set({"id":count,"event":event,"date":date,"time":time})
+        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
         ##      
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
@@ -379,7 +379,7 @@ def rejectOrder():
       else:
         for key in Data.keys(): count += 1
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
-        ListToDb.set({"id":count,"event":event,"date":date,"time":time})
+        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
         ##
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
@@ -489,18 +489,18 @@ def rejectOrder():
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
     if query_result.get('action') == 'showReminder.All':
-       RefEvent = db.reference("/EventReminder")
-       getEvent = RefEvent.get()
-       Event = []
-       a=''
-       try:
-        getEvent.keys()
-       except:
-         fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
-       else:
-         for x in getEvent.keys():
-           fullfillmentText='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
-       return fullfillmentText    
+      #  RefEvent = db.reference("/EventReminder")
+      #  getEvent = RefEvent.get()
+      #  Event = []
+      #  a=''
+      #  try:
+      #   getEvent.keys()
+      #  except:
+      #    fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
+      #  else:
+      #    for x in getEvent.keys():
+      #      fullfillmentText='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
+       return testcheck()    
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
