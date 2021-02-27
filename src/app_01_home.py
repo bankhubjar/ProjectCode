@@ -26,7 +26,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 tz = pytz.timezone('Asia/Bangkok')
 
@@ -48,7 +48,6 @@ appBlueprint = Blueprint("home",__name__)
 
 @appBlueprint.route('/calendar')
 def calendar():
-    
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -71,19 +70,8 @@ def calendar():
     service = build('calendar', 'v3', credentials=creds)
 
     # Call the Calendar API
-    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                        maxResults=10, singleEvents=True,
-                                        orderBy='startTime').execute()
-    events = events_result.get('items', [])
-    start = ''
-    if not events:
-        start ='No upcoming events found.'
-    for event in events:
-        start = start +event['start'].get('dateTime', event['start'].get('date'))+''+event['summary']+"<br>"
-    return start   
-
+    result = service.calendarList().list().execute()
+    return result
 
 
 @appBlueprint.route('/webhook',methods=['POST'])
@@ -94,6 +82,28 @@ def rejectOrder():
     query_result = RequestJson.get('queryResult')
     DateMonthYear = CurrentTime.strftime("%d/%m/%Y")
     HourMinuteSecond = CurrentTime.strftime("%H:%M:%S")
+
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                './src/credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('calendar', 'v3', credentials=creds)
+    
     if query_result.get('action') == 'object.confirm.noUsername': 
        Place = query_result['outputContexts'][1]["parameters"]["place"]
        objname = query_result['outputContexts'][1]["parameters"]["objname"] 
@@ -219,16 +229,41 @@ def rejectOrder():
 
     if query_result.get('action') == 'Reminder-TIme':
       event = query_result['outputContexts'][0]["parameters"]["any"]
-      time = query_result['outputContexts'][0]["parameters"]["time"]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time
+      datetime = query_result['outputContexts'][0]["parameters"]["time"]
+      date = datetime.split("T")[0]
+      time = datetime.split("T")[1]
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
+      eventcontent = {
+        'summary': event,
+        'location': '',
+        'description': '',
+        'start': {
+          'dateTime': datetime,
+          'timeZone': tz,
+        },
+        'end': {
+          'dateTime': datetime,
+          'timeZone': tz,
+        },
+        'reminders': {
+          'useDefault': False,
+          'overrides': [
+            {'method': 'email', 'minutes': 24 * 60},
+            {'method': 'popup', 'minutes': 10},
+          ],
+        },
+      }
       Data = RefFromDatabase.get()
       try:
         Data.keys()
       except:
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
-        ListToDb.set({"id":count+1,"event":event,"date":time})
+        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
+        ##      
+        service.events().insert(credentials=creds, body=eventcontent).execute()
+        ##
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
@@ -237,7 +272,10 @@ def rejectOrder():
       else:
         for key in Data.keys(): count += 1
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
-        ListToDb.set({"id":count+1,"event":event,"date":time})
+        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
+        ##
+        service.events().insert(credentials=creds, body=eventcontent).execute()
+        ##
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
