@@ -46,9 +46,100 @@ firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.
 import json
 appBlueprint = Blueprint("home",__name__)
 
+
+@appBlueprint.route('/test2')
+def testcheck():
+    ful = ''
+    data = ''
+    kiki = 0
+    ides = 0
+    with open("./src/message.json", encoding='utf-8', errors='ignore') as json_data:
+      data  = json.load(json_data)
+      data = data['queryResult']
+    while ides < len(data['outputContexts']):
+      try:
+        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+        Place = data['outputContexts'][ides]["parameters"]["place"]
+        objname = data['outputContexts'][ides]["parameters"]["objname"]        
+      except:
+        kiki+= 1
+        ides+=1
+      else:
+        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+        Place = data['outputContexts'][ides]["parameters"]["place"]
+        objname = data['outputContexts'][ides]["parameters"]["objname"]
+        ful = NameUser + Place + objname
+        break
+    return str(kiki) +" "+ful  
+        
+def checkJson(data):
+    kiki = 0
+    ides = 0
+    while ides < len(data['outputContexts']):
+      try:
+        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+        Place = data['outputContexts'][ides]["parameters"]["place"]
+        objname = data['outputContexts'][ides]["parameters"]["objname"]        
+      except:
+        kiki+= 1
+        ides+=1
+      else:
+        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+        Place = data['outputContexts'][ides]["parameters"]["place"]
+        objname = data['outputContexts'][ides]["parameters"]["objname"]
+        ful = NameUser + Place + objname
+        break
+    return ides
+
+
 @appBlueprint.route('/calendar')
 def calendar():
-    
+    data = ''
+    RefNoUser = db.reference("/EventReminder")
+    with open("./src/message.json", encoding='utf-8', errors='ignore') as json_data:
+      data  = json.load(json_data)
+      data = data['queryResult']['outputContexts']
+    fullfillmentText= ''
+    temp = RefNoUser.get()
+    for x in temp.keys():
+            fullfillmentText +='คุณมีกิจกรรมคือ ' +str(temp[x]["event"]) +"ตอน " + str(temp[x]["date"]) + "  "
+    return str(len(data))
+    # creds = None
+    # # The file token.pickle stores the user's access and refresh tokens, and is
+    # # created automatically when the authorization flow completes for the first
+    # # time.
+    # if os.path.exists('token.pickle'):
+    #     with open('token.pickle', 'rb') as token:
+    #         creds = pickle.load(token)
+    # # If there are no (valid) credentials available, let the user log in.
+    # if not creds or not creds.valid:
+    #     if creds and creds.expired and creds.refresh_token:
+    #         creds.refresh(Request())
+    #     else:
+    #         flow = InstalledAppFlow.from_client_secrets_file(
+    #             './src/credentials.json', SCOPES)
+    #         creds = flow.run_local_server(port=0)
+    #     # Save the credentials for the next run
+    #     with open('token.pickle', 'wb') as token:
+    #         pickle.dump(creds, token)
+
+    # service = build('calendar', 'v3', credentials=creds)
+
+    # Call the Calendar API
+    # now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    # print('Getting the upcoming 10 events')
+    # events_result = service.events().list(calendarId='primary', timeMin=now,
+    #                                     maxResults=10, singleEvents=True,
+    #                                     orderBy='startTime').execute()
+    # events = events_result.get('items', [])
+    # start = ''
+    # if not events:
+    #     start ='No upcoming events found.'
+    # for event in events:
+    #     start = start +event['start'].get('dateTime', event['start'].get('date'))+''+event['summary']+"<br>"
+    # return start   
+
+def logintoCalenda():
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -69,8 +160,10 @@ def calendar():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
+    return service
 
-    # Call the Calendar API
+def getCalendar(service):
+    
     now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
     events_result = service.events().list(calendarId='primary', timeMin=now,
@@ -83,7 +176,6 @@ def calendar():
     for event in events:
         start = start +event['start'].get('dateTime', event['start'].get('date'))+''+event['summary']+"<br>"
     return start   
-
 
 
 @appBlueprint.route('/webhook',methods=['POST'])
@@ -117,7 +209,7 @@ def rejectOrder():
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
-    } 
+          } 
        else:
          for key in Deta.keys(): count+= 1
          ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
@@ -135,11 +227,10 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'object.confirm.withUsername':
-      RefNoUser = db.reference("/RememberV2") 
-      try:
-        NameUser = query_result['outputContexts'][3]["parameters"]["uname"]
-        Place = query_result['outputContexts'][3]["parameters"]["place"]
-        objname = query_result['outputContexts'][3]["parameters"]["objname"]
+        RefNoUser = db.reference("/RememberV2")
+        NameUser = query_result['outputContexts'][getCalendar(query_result)]["parameters"]["uname"]
+        Place = query_result['outputContexts'][getCalendar(query_result)]["parameters"]["place"]
+        objname = query_result['outputContexts'][getCalendar(query_result)]["parameters"]["objname"]
         RefFromDatabase = RefNoUser.child(""+NameUser)
         count = 0
         Deta = RefFromDatabase.get()
@@ -176,46 +267,7 @@ def rejectOrder():
               "displayText": '25',
               "source": "webhookdata"
        }
-      except:
-        NameUser = query_result['outputContexts'][8]["parameters"]["uname"]
-        Place = query_result['outputContexts'][8]["parameters"]["place"]
-        objname = query_result['outputContexts'][8]["parameters"]["objname"]
-        RefFromDatabase = RefNoUser.child(""+NameUser)
-        count = 0
-        Deta = RefFromDatabase.get()
-        try:
-            Deta.keys()
-        except: 
-            ListToDB = RefFromDatabase.child("รายการที่1")
-            ListToDB.set({
-              "amonut":"1"
-              ,"id":count+1
-              ,"item":objname
-              ,"Location":Place
-              ,"Date": DateMonthYear
-              ,"time": HourMinuteSecond
-          })
-            return {
-              "fulfillmentText": "บันทึกรายการเรียบร้อย",
-              "displayText": '25',
-              "source": "webhookdata"
-      } 
-        else:
-          for key in Deta.keys(): count+= 1
-          ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
-          ListToDB.set({
-              "amonut":"1"
-              ,"id":count+1
-              ,"item":objname
-              ,"Location":Place
-              ,"Date": DateMonthYear
-              ,"time": HourMinuteSecond
-              })
-          return {
-              "fulfillmentText": "บันทึกรายการเรียบร้อย",
-              "displayText": '25',
-              "source": "webhookdata"
-       }          
+      
     if query_result.get('action') == 'showAll..specifyname':
       try:
         NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
@@ -316,6 +368,9 @@ def rejectOrder():
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
 
+
+    if query_result.get('action') == 'showReminder':
+      fullfillmentText = getCalendar(logintoCalenda())  
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
