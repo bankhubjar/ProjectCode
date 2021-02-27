@@ -97,7 +97,7 @@ def testcheck(mintimeformDialog,maxtimeformDialog):
     events = events_result.get('items', [])
 
     if not events:
-        start[0] ='No upcoming events found.'
+        start.append('No upcoming events found.')
     for event in events:
         eiei = event['start'].get('dateTime', event['start'].get('date'))
         start.append('การแจ้งเตือนของคุณมี '+event['summary']+' ตอน '+str(eiei.split("T")[0])+' เวลา '+str(eiei.split("T")[1].split("+")[0])+'')
