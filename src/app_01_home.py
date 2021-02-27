@@ -61,18 +61,40 @@ def calendar():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                './src/credentials.json', SCOPES)
+                './src/credentials.json', scopes=SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-
-    # Call the Calendar API
     result = service.calendarList().list().execute()
-    return result
-
+    calendar_id = result['items'][0]['id']
+    # Call the Calendar API
+    event = "bruh"
+    datetimeq = "2021-02-27T15:00:00+07:00"
+    eventcontent = {
+        'summary': event,
+        'location': '',
+        'description': '',
+        'start': {
+          'dateTime': datetimeq,
+          'timeZone': 'Asia/Bangkok',
+        },
+        'end': {
+          'dateTime': datetimeq,
+          'timeZone': 'Asia/Bangkok',
+        },
+        'reminders': {
+          'useDefault': False,
+          'overrides': [
+            {'method': 'email', 'minutes': 24 * 60},
+            {'method': 'popup', 'minutes': 10},
+          ],
+        },
+      }
+    service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+    return "sent event to "+calendar_id
 
 @appBlueprint.route('/webhook',methods=['POST'])
 def rejectOrder():
@@ -96,14 +118,16 @@ def rejectOrder():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                './src/credentials.json', SCOPES)
+                './src/credentials.json', scopes=SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-    
+    result = service.calendarList().list().execute()
+    calendar_id = result['items'][0]['id']
+
     if query_result.get('action') == 'object.confirm.noUsername': 
        Place = query_result['outputContexts'][1]["parameters"]["place"]
        objname = query_result['outputContexts'][1]["parameters"]["objname"] 
@@ -229,22 +253,21 @@ def rejectOrder():
 
     if query_result.get('action') == 'Reminder-TIme':
       event = query_result['outputContexts'][0]["parameters"]["any"]
-      datetime = query_result['outputContexts'][0]["parameters"]["time"]
-      date = datetime.split("T")[0]
-      time = datetime.split("T")[1]
+      datetimeq = query_result['outputContexts'][0]["parameters"]["time"]
+      date = datetimeq.split("T")[0]
+      time = datetimeq.split("T")[1]
       fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
       eventcontent = {
         'summary': event,
-        'location': '',
-        'description': '',
+        'description': event,
         'start': {
-          'dateTime': datetime,
+          'dateTime': datetimeq,
           'timeZone': tz,
         },
         'end': {
-          'dateTime': datetime,
+          'dateTime': datetimeq,
           'timeZone': tz,
         },
         'reminders': {
@@ -262,7 +285,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
         ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
         ##      
-        service.events().insert(credentials=creds, body=eventcontent).execute()
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
@@ -274,7 +297,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
         ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
         ##
-        service.events().insert(credentials=creds, body=eventcontent).execute()
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
