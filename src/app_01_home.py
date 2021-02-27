@@ -337,7 +337,7 @@ def rejectOrder():
 
     if query_result.get('action') == 'reminder.Time':
       event = query_result['outputContexts'][0]["parameters"]["any"]
-      datetimeq = query_result['outputContexts'][0]["parameters"]["time"]
+      datetimeq = query_result['outputContexts'][0]["parameters"]["datetime"]
       date = datetimeq.split("T")[0]
       time = datetimeq.split("T")[1]
       fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
