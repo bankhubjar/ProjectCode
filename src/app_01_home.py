@@ -46,6 +46,92 @@ firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.
 import json
 appBlueprint = Blueprint("home",__name__)
 
+
+@appBlueprint.route('/test2')
+def testcheck():
+    ful = ''
+    data = ''
+    kiki = 0
+    ides = 0
+    with open("./src/message.json", encoding='utf-8', errors='ignore') as json_data:
+      data  = json.load(json_data)
+      data = data['queryResult']
+    while ides < len(data['outputContexts']):
+      try:
+        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+        Place = data['outputContexts'][ides]["parameters"]["place"]
+        objname = data['outputContexts'][ides]["parameters"]["objname"]        
+      except:
+        kiki+= 1
+        ides+=1
+      else:
+        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+        Place = data['outputContexts'][ides]["parameters"]["place"]
+        objname = data['outputContexts'][ides]["parameters"]["objname"]
+        ful = NameUser + Place + objname
+        break
+    return str(kiki) +" "+ful  
+        
+def checkJson(data):
+    kiki = 0
+    ides = 0
+    while ides < len(data['outputContexts']):
+      try:
+        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+        Place = data['outputContexts'][ides]["parameters"]["place"]
+        objname = data['outputContexts'][ides]["parameters"]["objname"]        
+      except:
+        kiki+= 1
+        ides+=1
+      else:
+        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+        Place = data['outputContexts'][ides]["parameters"]["place"]
+        objname = data['outputContexts'][ides]["parameters"]["objname"]
+        break
+    return ides
+
+def checkService():
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+        service = build('calendar', 'v3', credentials=creds)
+        return service
+
+def callCa(service):
+    count = 0
+    start = []
+    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    print('Getting the upcoming 10 events')
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        maxResults=10, singleEvents=True,
+                                        orderBy='startTime').execute()
+    events = events_result.get('items', [])
+
+    if not events:
+        start[0]='No upcoming events found.'
+    for event in events:
+        start[count] = event['start'].get('dateTime', event['start'].get('date'))
+        count += 1
+    return start    
+
+
+
 @appBlueprint.route('/calendar')
 def calendar():
     creds = None
@@ -68,6 +154,7 @@ def calendar():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
+<<<<<<< HEAD
     result = service.calendarList().list().execute()
     calendar_id = result['items'][0]['id']
     # Call the Calendar API
@@ -95,6 +182,13 @@ def calendar():
       }
     service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
     return "sent event to "+calendar_id
+=======
+    return service
+
+    # Call the Calendar API
+    result = service.calendarList().list().execute()
+    return result
+>>>>>>> 281630d9f0a8a0b26f9c8ab3ea9145fdf18e03a8
 
 @appBlueprint.route('/webhook',methods=['POST'])
 def rejectOrder():
@@ -151,7 +245,7 @@ def rejectOrder():
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
-    } 
+          } 
        else:
          for key in Deta.keys(): count+= 1
          ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
@@ -169,11 +263,10 @@ def rejectOrder():
             "source": "webhookdata"
     }
     if query_result.get('action') == 'object.confirm.withUsername':
-      RefNoUser = db.reference("/RememberV2") 
-      try:
-        NameUser = query_result['outputContexts'][3]["parameters"]["uname"]
-        Place = query_result['outputContexts'][3]["parameters"]["place"]
-        objname = query_result['outputContexts'][3]["parameters"]["objname"]
+        RefNoUser = db.reference("/RememberV2")
+        NameUser = query_result['outputContexts'][checkJson(query_result)]["parameters"]["uname"]
+        Place = query_result['outputContexts'][checkJson(query_result)]["parameters"]["place"]
+        objname = query_result['outputContexts'][checkJson(query_result)]["parameters"]["objname"]
         RefFromDatabase = RefNoUser.child(""+NameUser)
         count = 0
         Deta = RefFromDatabase.get()
@@ -209,46 +302,7 @@ def rejectOrder():
               "fulfillmentText": "บันทึกรายการเรียบร้อย",
               "displayText": '25',
               "source": "webhookdata"
-       }
-      except:
-        NameUser = query_result['outputContexts'][8]["parameters"]["uname"]
-        Place = query_result['outputContexts'][8]["parameters"]["place"]
-        objname = query_result['outputContexts'][8]["parameters"]["objname"]
-        RefFromDatabase = RefNoUser.child(""+NameUser)
-        count = 0
-        Deta = RefFromDatabase.get()
-        try:
-            Deta.keys()
-        except: 
-            ListToDB = RefFromDatabase.child("รายการที่1")
-            ListToDB.set({
-              "amonut":"1"
-              ,"id":count+1
-              ,"item":objname
-              ,"Location":Place
-              ,"Date": DateMonthYear
-              ,"time": HourMinuteSecond
-          })
-            return {
-              "fulfillmentText": "บันทึกรายการเรียบร้อย",
-              "displayText": '25',
-              "source": "webhookdata"
-      } 
-        else:
-          for key in Deta.keys(): count+= 1
-          ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
-          ListToDB.set({
-              "amonut":"1"
-              ,"id":count+1
-              ,"item":objname
-              ,"Location":Place
-              ,"Date": DateMonthYear
-              ,"time": HourMinuteSecond
-              })
-          return {
-              "fulfillmentText": "บันทึกรายการเรียบร้อย",
-              "displayText": '25',
-              "source": "webhookdata"
+<<<<<<< HEAD
        } 
 
     if query_result.get('action') == 'Reminder-TIme':
@@ -305,6 +359,9 @@ def rejectOrder():
           "source": "webhookdata"
         }
              
+=======
+       }      
+>>>>>>> 281630d9f0a8a0b26f9c8ab3ea9145fdf18e03a8
     if query_result.get('action') == 'showAll..specifyname':
       try:
         NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
@@ -404,7 +461,14 @@ def rejectOrder():
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
-
+    if query_result.get('action') == 'showReminder':
+       i = 0 
+       fullfillmentText = ''
+       calendarArray = callCa(checkService)
+       while i > 3:
+         fullfillmentText += calendarArray[i]
+         i+=1
+        
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '25',
