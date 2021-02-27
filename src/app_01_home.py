@@ -514,7 +514,7 @@ def rejectOrder():
             "source": "webhookdata"
       } 
     if query_result.get('action') == 'showReminder.Date':
-      datefromdialog =  query_result['parameters']['showreminderdate']
+      datefromdialog =  query_result['parameters'][1]['showreminderdate']
       return {
         "fulfillmentText": testcheck(datefromdialog,""),
         "displayText": '50',
