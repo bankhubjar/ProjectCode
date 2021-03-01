@@ -615,7 +615,7 @@ def rejectOrder():
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
         newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-        "fulfillmentText": testcheck(todaydate,newcheck),
+        "fulfillmentText": testcheck(startdateformat,newcheck),
         "displayText": '50',
         "source": "webhookdata"
       }
