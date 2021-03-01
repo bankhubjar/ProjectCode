@@ -394,7 +394,8 @@ def rejectOrder():
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
-    }
+      }
+
     if query_result.get('action') == 'object.confirm.withUsername':
         RefNoUser = db.reference("/RememberV2")
         NameUser = query_result['outputContexts'][checkJson(query_result,"name")]["parameters"]["uname"]
@@ -439,9 +440,17 @@ def rejectOrder():
 
     if query_result.get('action') == 'reminder.Time':
       event = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["any"]
-      datetimeq = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["datetime"]
-      date = datetimeq.split("T")[0]
-      time = datetimeq.split("T")[1].split("+")[0]
+      if query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"] == "" :
+        datewithtime = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["datetime"]
+        date = datewithtime.split("T")[0]
+        time = datewithtime.split("T")[1].split("+")[0]
+        eventtime = datewithtime
+      else :
+        dateonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"]
+        timeonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["datetime"]
+        date = dateonly.split("T")[0]
+        time = timeonly.split("T")[1].split("+")[0]
+        eventtime = dateonly.split("T")[0]+"T"+timeonly.split("T")[1]
       fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
@@ -450,11 +459,11 @@ def rejectOrder():
         'summary': event,
         'description': event,
         'start': {
-          'dateTime': datetimeq,
+          'dateTime': eventtime,
           'timeZone': time_zone,
         },
         'end': {
-          'dateTime': datetimeq,
+          'dateTime': eventtime,
           'timeZone': time_zone,
         },
         'reminders': {
@@ -589,8 +598,7 @@ def rejectOrder():
         fullfillmentText = a+b+c+d+e+f 
       except:
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-    if fullfillmentText == '':
-      fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
+    
     if query_result.get('action') == 'showReminder.All':
        return {
             "fulfillmentText": testcheck("",""),
@@ -681,7 +689,11 @@ def rejectOrder():
           "source": "webhookdata"
         } 
 
+    if query_result.get('action') == 'ShowActivity.date' :
+      datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
 
+    if fullfillmentText == '':
+      fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
