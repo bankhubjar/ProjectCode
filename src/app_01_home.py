@@ -160,6 +160,23 @@ def checkJsonForCalendar(data):
         break
     return ides
 
+def checkJsonForActivity(data):
+  kiki = 0
+    ides = 0
+    while ides < len(data['outputContexts']):
+      try:
+        aany = data['outputContexts'][ides]["parameters"]["activityname"]
+        datetime = data['outputContexts'][ides]["parameters"]["activitytime"]
+ 
+      except:
+        kiki+= 1
+        ides+=1
+      else:
+        aany = data['outputContexts'][ides]["parameters"]["activityname"]
+        dateime = data['outputContexts'][ides]["parameters"]["activitytime"]
+        break
+    return ides
+
 def checkJsonForItem(data,informname):
     kiki = 0
     ides = 0
@@ -584,10 +601,12 @@ def rejectOrder():
       }
 
     if query_result.get('action') == 'activityTime':
-      activityname = query_result['outputContexts'][0]['parameters']['activityname']
-      activitytime = query_result['outputContexts'][0]['parameters']['activitytime']
-      date = activitytime.split("T")[0]
+      activityname = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activityname']
+      activitytime = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activitytime']
+      datetime = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['date']
+      date = datetime.split("T")[0]
       time = activitytime.split("T")[1].split("+")[0]
+      temptime = datetime.split("T")[0]+"T"+activitytime.split("T")[1]
       fulfillmentText = "คุณได้บันทึกกิจกรรม "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
@@ -596,11 +615,11 @@ def rejectOrder():
         'summary': activityname,
         'description': activityname,
         'start': {
-          'dateTime': activitytime,
+          'dateTime': temptime,
           'timeZone': time_zone,
         },
         'end': {
-          'dateTime': activitytime,
+          'dateTime': temptime,
           'timeZone': time_zone,
         },
         'reminders': {
