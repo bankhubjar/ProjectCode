@@ -46,12 +46,19 @@ firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.
 import json
 appBlueprint = Blueprint("home",__name__)
 
-
 @appBlueprint.route('/test2')
-def testcheck():
+def testcheck2():
+    data =''
+    with open("./src/message.json", errors='ignore') as read_file:
+       data = json.load(read_file)
+    # query_result['parameters'][1]['showreminderdate']
+    return data["queryResult"]['parameters']['showreminderdate'][0]
+
+def testcheck(mintimeformDialog,maxtimeformDialog):
     ful = ''
     i = 0
     start =[]
+    now = ''
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -75,24 +82,28 @@ def testcheck():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-
-    # Call the Calendar API
-    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
+    if not mintimeformDialog:
+      now = datetime.utcnow().isoformat() + 'Z'   
+    else:
+      now = mintimeformDialog
+    if not maxtimeformDialog:
+      events_result = service.events().list(calendarId='primary', timeMin=now,
                                         maxResults=10, singleEvents=True,
+                                        orderBy='startTime').execute()
+    else:    
+      events_result = service.events().list(calendarId='primary', timeMin=now,
+                                        timeMax=maxtimeformDialog,maxResults=10, singleEvents=True,
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
 
     if not events:
-        start[0] ='No upcoming events found.'
+        start.append('No upcoming events found.')
     for event in events:
         eiei = event['start'].get('dateTime', event['start'].get('date'))
-        start.append(eiei+''+event['summary'])
-    while i > len(start):
-      ful += start[i]
-      i+=1     
-    return ful
+        start.append('การแจ้งเตือนของคุณมี '+event['summary']+' ตอน '+str(eiei.split("T")[0])+' เวลา '+str(eiei.split("T")[1].split("+")[0])+'')
+    for x in start:
+      ful += x 
+    return str(ful)
       # i = 0 
       # fullfillmentText = 'eiei'
 
@@ -158,21 +169,21 @@ def callCa(service):
         start.append(text+''+str(event['summary'])) 
     return start    
 
-# @appBlueprint.route('/test1')
-# def wtf():
-#        fullfillmentText=''
-#        RefEvent = db.reference("/EventReminder")
-#        getEvent = RefEvent.get()
-#        Event = []
-#        a=''
-#        try:
-#         getEvent.keys()
-#        except:
-#          fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
-#        else:
-#          for x in getEvent.keys():
-#            fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
-#        return fullfillmentText
+@appBlueprint.route('/test1')
+def wtf():
+       fullfillmentText=''
+       RefEvent = db.reference("/EventReminder")
+       getEvent = RefEvent.get()
+       Event = []
+       a=''
+       try:
+        getEvent.keys()
+       except:
+         fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
+       else:
+         for x in getEvent.keys():
+           fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
+       return fullfillmentText
 
 @appBlueprint.route('/calendar')
 def calendar():
@@ -339,8 +350,10 @@ def rejectOrder():
       event = query_result['outputContexts'][0]["parameters"]["any"]
       datetimeq = query_result['outputContexts'][0]["parameters"]["datetime"]
       date = datetimeq.split("T")[0]
-      time = datetimeq.split("T")[1].split("+")[0]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
+      time = datetimeq.split("T")[1]
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
+      RefFromDatabase = db.reference("/EventReminder") 
+      count = 0
       time_zone = 'Asia/Bangkok'
       eventcontent = {
         'summary': event,
@@ -361,12 +374,32 @@ def rejectOrder():
           ],
         },
       }
-      service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
-      return {
-        "fulfillmentText": fulfillmentText,
-        "displayText": '25',
-        "source": "webhookdata"
-      }
+      Data = RefFromDatabase.get()
+      try:
+        Data.keys()
+      except:
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
+        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
+        ##      
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        }
+      else:
+        for key in Data.keys(): count += 1
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
+        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
+        ##
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        }
              
     if query_result.get('action') == 'showAll..specifyname':
       try:
@@ -465,27 +498,35 @@ def rejectOrder():
         fullfillmentText = a+b+c+d+e+f 
       except:
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
-
     if query_result.get('action') == 'showReminder.All':
-       RefEvent = db.reference("/EventReminder")
-       getEvent = RefEvent.get()
-       Event = []
-       a=''
-       try:
-        getEvent.keys()
-       except:
-         fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
-       else:
-         for x in getEvent.keys():
-           fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
-       return fullfillmentText    
-       
+      #  RefEvent = db.reference("/EventReminder")
+      #  getEvent = RefEvent.get()
+      #  Event = []
+      #  a=''
+      #  try:
+      #   getEvent.keys()
+      #  except:
+      #    fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
+      #  else:
+      #    for x in getEvent.keys():
+      #      fullfillmentText='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
+       return {
+            "fulfillmentText": testcheck("",""),
+            "displayText": '50',
+            "source": "webhookdata"
+      } 
+    if query_result.get('action') == 'showReminder.Date':
+      datefromdialog =  query_result['parameters']['showreminderdate'][0]
+      return {
+        "fulfillmentText": testcheck(datefromdialog,""),
+        "displayText": '50',
+        "source": "webhookdata"
+      }
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
             "source": "webhookdata"
-    }  
+      }  
 
