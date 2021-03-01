@@ -623,7 +623,7 @@ def rejectOrder():
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
         newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-        "fulfillmentText": testcheck(startdateformat,newcheck)+"wtf",
+        "fulfillmentText": testcheck(startdateformat,newcheck)+"wtf"+resultcheck,
         "displayText": '50',
         "source": "webhookdata"
       }
@@ -635,7 +635,7 @@ def rejectOrder():
         startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
         enddaydateformat = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-          "fulfillmentText": testcheck(startdateformat,enddaydateformat),
+          "fulfillmentText": testcheck(startdateformat,enddaydateformat)+""+resultcheck,
           "displayText": '50',
           "source": "webhookdata"
         }
