@@ -691,9 +691,9 @@ def rejectOrder():
       except:
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
         ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
-        ##      
-        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
-        ##
+        # ##      
+        # service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        # ##
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
@@ -703,9 +703,9 @@ def rejectOrder():
         for key in Data.keys(): count += 1
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
         ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
-        ##
-        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
-        ##
+        # ##
+        # service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        # ##
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
