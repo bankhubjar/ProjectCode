@@ -162,6 +162,23 @@ def checkJsonForCalendar(data):
         break
     return ides
 
+def checkJsonForActivity(data):
+    kiki = 0
+    ides = 0
+    while ides < len(data['outputContexts']):
+      try:
+        aany = data['outputContexts'][ides]["parameters"]["activityname"]
+        datetime = data['outputContexts'][ides]["parameters"]["activitytime"]
+ 
+      except:
+        kiki+= 1
+        ides+=1
+      else:
+        aany = data['outputContexts'][ides]["parameters"]["activityname"]
+        dateime = data['outputContexts'][ides]["parameters"]["activitytime"]
+        break
+    return ides
+
 def checkJsonForItem(data,informname):
     kiki = 0
     ides = 0
@@ -423,8 +440,8 @@ def rejectOrder():
       event = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["any"]
       datetimeq = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["datetime"]
       date = datetimeq.split("T")[0]
-      time = datetimeq.split("T")[1]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
+      time = datetimeq.split("T")[1].split("+")[0]
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
       time_zone = 'Asia/Bangkok'
@@ -578,7 +595,8 @@ def rejectOrder():
             "fulfillmentText": testcheck("",""),
             "displayText": '50',
             "source": "webhookdata"
-      } 
+      }
+
     if query_result.get('action') == 'showReminder.Date':
       datefromdialog =  query_result['parameters']['showreminderdate'][0]
       if checkJsonToday(query_result) == "วันนี้":
@@ -598,9 +616,69 @@ def rejectOrder():
           "displayText": '50',
           "source": "webhookdata"
         }
+
+    if query_result.get('action') == 'activityTime':
+      activityname = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activityname']
+      activitytime = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activitytime']
+      datetimea = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['date']
+      date = datetimea.split("T")[0]
+      time = activitytime.split("T")[1].split("+")[0]
+      temptime = datetimea.split("T")[0]+"T"+activitytime.split("T")[1]
+      fulfillmentText = "คุณได้บันทึกกิจกรรม "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
+      RefFromDatabase = db.reference("/ActivityReminder") 
+      count = 0
+      time_zone = 'Asia/Bangkok'
+      eventcontent = {
+        'summary': activityname,
+        'description': activityname,
+        'start': {
+          'dateTime': temptime,
+          'timeZone': time_zone,
+        },
+        'end': {
+          'dateTime': temptime,
+          'timeZone': time_zone,
+        },
+        'reminders': {
+          'useDefault': False,
+          'overrides': [
+            {'method': 'email', 'minutes': 24 * 60},
+            {'method': 'popup', 'minutes': 10},
+          ],
+        },
+      }
+      Data = RefFromDatabase.get()
+      try:
+        Data.keys()
+      except:
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
+        ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
+        ##      
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        }
+      else:
+        for key in Data.keys(): count += 1
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
+        ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
+        ##
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        } 
+
+
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
             "source": "webhookdata"
       }  
+    
 
