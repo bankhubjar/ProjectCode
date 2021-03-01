@@ -97,7 +97,7 @@ def testcheck(mintimeformDialog,maxtimeformDialog):
     events = events_result.get('items', [])
 
     if not events:
-        start.append('No upcoming events found.')
+        start.append('ไม่มีกิจกรรมแม้แต่นิดเดียวเลยเจ้าค่ะ.')
     for event in events:
         eiei = event['start'].get('dateTime', event['start'].get('date'))
         start.append('การแจ้งเตือนของคุณมี '+event['summary']+' ตอน '+str(eiei.split("T")[0])+' เวลา '+str(eiei.split("T")[1].split("+")[0])+'')
@@ -112,23 +112,82 @@ def testcheck(mintimeformDialog,maxtimeformDialog):
       #    fullfillmentText += calendarArray[i]
         #  i+=1
         
-def checkJson(data):
+def checkJson(data,name):
+    kiki = 0
+    ides = 0
+    if not name:
+      while ides < len(data['outputContexts']):
+        try:
+          NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+          Place = data['outputContexts'][ides]["parameters"]["place"]
+          objname = data['outputContexts'][ides]["parameters"]["objname"]        
+        except:
+          kiki+= 1
+          ides+=1
+        else:
+          NameUser = data['outputContexts'][ides]["parameters"]["uname"]
+          Place = data['outputContexts'][ides]["parameters"]["place"]
+          objname = data['outputContexts'][ides]["parameters"]["objname"]
+          break
+    else:
+      while ides < len(data['outputContexts']):
+        try:
+         Place = data['outputContexts'][ides]["parameters"]["place"]
+         objname = data['outputContexts'][ides]["parameters"]["objname"]        
+        except:
+            kiki+= 1
+            ides+=1
+        else:
+          Place = data['outputContexts'][ides]["parameters"]["place"]
+          objname = data['outputContexts'][ides]["parameters"]["objname"]
+          break
+    return ides
+
+def checkJsonForCalendar(data):
     kiki = 0
     ides = 0
     while ides < len(data['outputContexts']):
       try:
-        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
-        Place = data['outputContexts'][ides]["parameters"]["place"]
-        objname = data['outputContexts'][ides]["parameters"]["objname"]        
+        NameUser = data['outputContexts'][ides]["parameters"]["any"]
+        Place = data['outputContexts'][ides]["parameters"]["datetime"]
+ 
       except:
         kiki+= 1
         ides+=1
       else:
-        NameUser = data['outputContexts'][ides]["parameters"]["uname"]
-        Place = data['outputContexts'][ides]["parameters"]["place"]
-        objname = data['outputContexts'][ides]["parameters"]["objname"]
+        NameUser = data['outputContexts'][ides]["parameters"]["any"]
+        Place = data['outputContexts'][ides]["parameters"]["dateime"]
         break
     return ides
+
+def checkJsonForItem(data,informname):
+    kiki = 0
+    ides = 0
+    if not informname:
+      while ides < len(data['outputContexts']):
+        try:
+          informname = data['outputContexts'][ides]["parameters"]["informname"]
+          specifyItemName = data['outputContexts'][ides]["parameters"]["specifyItemName"]
+        except:
+          kiki+= 1
+          ides+=1
+        else:
+          informname = data['outputContexts'][ides]["parameters"]["informname"]
+          specifyItemName = data['outputContexts'][ides]["parameters"]["specifyItemName"]
+        break
+    else:
+      while ides < len(data['outputContexts']):
+        try:
+            specifyItemName = data['outputContexts'][ides]["parameters"]["specifyItemName"]
+        except:
+            kiki+= 1
+            ides+=1
+        else:
+          specifyItemName = data['outputContexts'][ides]["parameters"]["specifyItemName"]
+          break
+    return ides
+
+
 
 def checkService():
     creds = None
@@ -265,8 +324,8 @@ def rejectOrder():
     calendar_id = result['items'][0]['id']
 
     if query_result.get('action') == 'object.confirm.noUsername': 
-       Place = query_result['outputContexts'][1]["parameters"]["place"]
-       objname = query_result['outputContexts'][1]["parameters"]["objname"] 
+       Place = query_result['outputContexts'][checkJson(query_result,"")]["parameters"]["place"]
+       objname = query_result['outputContexts'][checkJson(query_result,"")]["parameters"]["objname"] 
        RefFromDatabase = db.reference("/RememberV2/Home") 
        count = 0
        Deta = RefFromDatabase.get()
@@ -306,9 +365,9 @@ def rejectOrder():
     }
     if query_result.get('action') == 'object.confirm.withUsername':
         RefNoUser = db.reference("/RememberV2")
-        NameUser = query_result['outputContexts'][checkJson(query_result)]["parameters"]["uname"]
-        Place = query_result['outputContexts'][checkJson(query_result)]["parameters"]["place"]
-        objname = query_result['outputContexts'][checkJson(query_result)]["parameters"]["objname"]
+        NameUser = query_result['outputContexts'][checkJson(query_result,"name")]["parameters"]["uname"]
+        Place = query_result['outputContexts'][checkJson(query_result,"name")]["parameters"]["place"]
+        objname = query_result['outputContexts'][checkJson(query_result,"name")]["parameters"]["objname"]
         RefFromDatabase = RefNoUser.child(""+NameUser)
         count = 0
         Deta = RefFromDatabase.get()
@@ -403,7 +462,7 @@ def rejectOrder():
              
     if query_result.get('action') == 'showAll..specifyname':
       try:
-        NameUserser = query_result['outputContexts'][1]["parameters"]["specifyname"]
+        NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyname"]
         RefFromDatabase = db.reference("/RememberV2")
 
         RefNo2 = db.reference("/ShowHistory")
@@ -434,11 +493,11 @@ def rejectOrder():
 
     if query_result.get('action') == 'showSpecify.inform':
       try:
-        NameUserser = query_result['outputContexts'][1]["parameters"]["informname"]
+        NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["informname"]
         if "specifyItemName" in query_result:
-          item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
+          item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
         else:
-          item = query_result['outputContexts'][6]["parameters"]["specifyItemName"]
+          item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2") 
         ##
         RefNo2 = db.reference("/ShowHistory")
@@ -457,9 +516,9 @@ def rejectOrder():
     if query_result.get('action') == 'specifyItemname.no.inform':
       try:
         if "specifyItemName" in query_result:
-          item = query_result['outputContexts'][1]["parameters"]["specifyItemName"]
+          item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
         else:
-          item = query_result['outputContexts'][5]["parameters"]["specifyItemName"]
+          item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2/Home") 
         ##
         RefNo2 = db.reference("/ShowHistory")

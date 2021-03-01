@@ -1,67 +1,147 @@
 {
-  "responseId": "df889476-d482-4256-8c50-dc7d918dfbab-d8906a81",
+  "responseId": "0df876be-1836-49d1-b8b0-fa09836e2f52-d8906a81",
   "queryResult": {
-    "queryText": "แสดงสิ่งที่ฉันให้เตือนวันพรุ่งนี้",
-    "action": "showReminder.Date",
+    "queryText": "6 โมง",
+    "action": "reminder.Time",
     "parameters": {
-      "reminder": [
-        "แสดง",
-        "เตือน"
-      ],
-      "showreminderdate": [
-        "2021-02-28T12:00:00+07:00"
-      ]
+      "datetime": "2021-03-01T18:00:00+07:00"
     },
     "allRequiredParamsPresent": true,
-    "fulfillmentText": "show reminder date: 2021-02-28T12:00:00+07:00",
+    "fulfillmentText": "ได้เลย เวลาที่คุณเลือกไว้ 2021-03-01T18:00:00+07:00",
     "fulfillmentMessages": [
       {
         "text": {
           "text": [
-            "show reminder date: 2021-02-28T12:00:00+07:00"
+            "ได้เลย เวลาที่คุณเลือกไว้ 2021-03-01T18:00:00+07:00"
           ]
         }
       }
     ],
     "outputContexts": [
       {
-        "name": "projects/worawit-l9gi/locations/global/agent/sessions/a4a4ec71-4ccd-036a-3ede-0041566ce779/contexts/__system_counters__",
+        "name": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl/contexts/actions_capability_screen_output",
+        "parameters": {
+          "datetime": "2021-03-01T18:00:00+07:00",
+          "datetime.original": "6 โมง"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl/contexts/actions_capability_account_linking",
+        "parameters": {
+          "datetime": "2021-03-01T18:00:00+07:00",
+          "datetime.original": "6 โมง"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl/contexts/actions_capability_media_response_audio",
+        "parameters": {
+          "datetime": "2021-03-01T18:00:00+07:00",
+          "datetime.original": "6 โมง"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl/contexts/actions_capability_audio_output",
+        "parameters": {
+          "datetime": "2021-03-01T18:00:00+07:00",
+          "datetime.original": "6 โมง"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl/contexts/google_assistant_input_type_voice",
+        "parameters": {
+          "datetime": "2021-03-01T18:00:00+07:00",
+          "datetime.original": "6 โมง"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl/contexts/reminder-data",
+        "parameters": {
+          "reminder": "เตือน",
+          "reminder.original": "เตือนว่า",
+          "any": "ฉันต้องกินยา",
+          "any.original": "ฉันต้องกินยา",
+          "datetime": "2021-03-01T18:00:00+07:00",
+          "datetime.original": "6 โมง"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl/contexts/reminder-followup",
+        "parameters": {
+          "reminder": "เตือน",
+          "reminder.original": "เตือนว่า",
+          "any": "ฉันต้องกินยา",
+          "any.original": "ฉันต้องกินยา",
+          "datetime": "2021-03-01T18:00:00+07:00",
+          "datetime.original": "6 โมง"
+        }
+      },
+      {
+        "name": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl/contexts/__system_counters__",
         "parameters": {
           "no-input": 0,
           "no-match": 0,
-          "reminder": [
-            "แสดง",
-            "เตือน"
-          ],
-          "reminder.original": [
-            "แสดง",
-            "เตือน"
-          ],
-          "showreminderdate": [
-            "2021-02-28T12:00:00+07:00"
-          ],
-          "showreminderdate.original": [
-            "วันพรุ่งนี้"
-          ]
+          "datetime": "2021-03-01T18:00:00+07:00",
+          "datetime.original": "6 โมง"
         }
       }
     ],
     "intent": {
-      "name": "projects/worawit-l9gi/locations/global/agent/intents/1e9cd7b6-f158-4b74-a825-a259f8cc0f1a",
-      "displayName": "showReminder - date"
+      "name": "projects/worawit-l9gi/agent/intents/db6006db-6a8e-443f-8372-b3b5610d99d0",
+      "displayName": "Reminder - Time"
     },
     "intentDetectionConfidence": 1,
-    "languageCode": "th",
-    "sentimentAnalysisResult": {
-      "queryTextSentiment": {
-        "score": 0.5,
-        "magnitude": 0.5
-      }
-    }
+    "languageCode": "th"
   },
   "originalDetectIntentRequest": {
-    "source": "DIALOGFLOW_CONSOLE",
-    "payload": {}
+    "source": "google",
+    "version": "2",
+    "payload": {
+      "user": {
+        "locale": "th-TH",
+        "userVerificationStatus": "VERIFIED"
+      },
+      "conversation": {
+        "conversationId": "ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl",
+        "type": "ACTIVE",
+        "conversationToken": "[\"reminder-data\",\"reminder-followup\"]"
+      },
+      "inputs": [
+        {
+          "intent": "actions.intent.TEXT",
+          "rawInputs": [
+            {
+              "inputType": "VOICE",
+              "query": "6 โมง"
+            }
+          ],
+          "arguments": [
+            {
+              "name": "text",
+              "rawText": "6 โมง",
+              "textValue": "6 โมง"
+            }
+          ]
+        }
+      ],
+      "surface": {
+        "capabilities": [
+          {
+            "name": "actions.capability.SCREEN_OUTPUT"
+          },
+          {
+            "name": "actions.capability.ACCOUNT_LINKING"
+          },
+          {
+            "name": "actions.capability.MEDIA_RESPONSE_AUDIO"
+          },
+          {
+            "name": "actions.capability.AUDIO_OUTPUT"
+          }
+        ]
+      },
+      "isInSandbox": true,
+      "requestType": "SIMULATOR"
+    }
   },
-  "session": "projects/worawit-l9gi/locations/global/agent/sessions/a4a4ec71-4ccd-036a-3ede-0041566ce779"
+  "session": "projects/worawit-l9gi/agent/sessions/ABwppHEHwFwjYTeFQ1RTJG8LCAOISVJEWkk5FSLg5FyD260LQB4eY_M8pnkUkhmoq6zOAQy6IhGuRCLl"
 }
