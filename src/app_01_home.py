@@ -169,21 +169,21 @@ def callCa(service):
         start.append(text+''+str(event['summary'])) 
     return start    
 
-@appBlueprint.route('/test1')
-def wtf():
-       fullfillmentText=''
-       RefEvent = db.reference("/EventReminder")
-       getEvent = RefEvent.get()
-       Event = []
-       a=''
-       try:
-        getEvent.keys()
-       except:
-         fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
-       else:
-         for x in getEvent.keys():
-           fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
-       return fullfillmentText
+# @appBlueprint.route('/test1')
+# def wtf():
+#        fullfillmentText=''
+#        RefEvent = db.reference("/EventReminder")
+#        getEvent = RefEvent.get()
+#        Event = []
+#        a=''
+#        try:
+#         getEvent.keys()
+#        except:
+#          fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
+#        else:
+#          for x in getEvent.keys():
+#            fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
+#        return fullfillmentText
 
 @appBlueprint.route('/calendar')
 def calendar():
