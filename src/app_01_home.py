@@ -154,13 +154,13 @@ def checkJsonForCalendar(data):
         aany = data['outputContexts'][ides]["parameters"]["any"]
         datetime = data['outputContexts'][ides]["parameters"]["datetime"]
       except:
-        kiki+= 1
+        kiki+=1
         ides+=1
       else:
         aany = data['outputContexts'][ides]["parameters"]["any"]
         dateime = data['outputContexts'][ides]["parameters"]["datetime"]
         break
-    return ides
+    return ides-1
 
 def checkJsonForActivity(data):
     kiki = 0
@@ -171,7 +171,7 @@ def checkJsonForActivity(data):
         datetime = data['outputContexts'][ides]["parameters"]["activitytime"]
  
       except:
-        kiki+= 1
+        kiki+=1
         ides+=1
       else:
         aany = data['outputContexts'][ides]["parameters"]["activityname"]
