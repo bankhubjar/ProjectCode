@@ -1,57 +1,53 @@
 {
-  "responseId": "64993960-c640-4735-b562-8fe50888cedd-d8906a81",
+  "responseId": "6726ee12-74b4-46ad-ab0b-522ba769201a-d8906a81",
   "queryResult": {
-    "queryText": "แสดงการเตือนของวันนี้",
-    "action": "showReminder.Date",
+    "queryText": "พรุ่งนี้",
+    "action": "ShowActivity.date",
     "parameters": {
-      "reminder": [
-        "แสดง",
-        "เตือน"
-      ],
-      "showreminderdate": [
-        "2021-03-01T12:00:00+07:00"
-      ]
+      "date-time": "2021-03-02T12:00:00+07:00"
     },
     "allRequiredParamsPresent": true,
-    "fulfillmentText": "show reminder date: 2021-03-01T12:00:00+07:00",
+    "fulfillmentText": "แสดงกิจกรรมวันที่ 2021-03-02T12:00:00+07:00",
     "fulfillmentMessages": [
       {
         "text": {
           "text": [
-            "show reminder date: 2021-03-01T12:00:00+07:00"
+            "แสดงกิจกรรมวันที่ 2021-03-02T12:00:00+07:00"
           ]
         }
       }
     ],
     "outputContexts": [
       {
+        "name": "projects/worawit-l9gi/locations/global/agent/sessions/a4a4ec71-4ccd-036a-3ede-0041566ce779/contexts/showactivity-followup",
+        "lifespanCount": 1,
+        "parameters": {
+          "date-time": "2021-03-02T12:00:00+07:00",
+          "date-time.original": "พรุ่งนี้"
+        }
+      },
+      {
         "name": "projects/worawit-l9gi/locations/global/agent/sessions/a4a4ec71-4ccd-036a-3ede-0041566ce779/contexts/__system_counters__",
         "parameters": {
           "no-input": 0,
           "no-match": 0,
-          "reminder": [
-            "แสดง",
-            "เตือน"
-          ],
-          "reminder.original": [
-            "แสดง",
-            "เตือน"
-          ],
-          "showreminderdate": [
-            "2021-03-01T12:00:00+07:00"
-          ],
-          "showreminderdate.original": [
-            "วันนี้"
-          ]
+          "date-time": "2021-03-02T12:00:00+07:00",
+          "date-time.original": "พรุ่งนี้"
         }
       }
     ],
     "intent": {
-      "name": "projects/worawit-l9gi/locations/global/agent/intents/1e9cd7b6-f158-4b74-a825-a259f8cc0f1a",
-      "displayName": "showReminder - date"
+      "name": "projects/worawit-l9gi/locations/global/agent/intents/af343f93-afdd-442a-8f71-84db931d8352",
+      "displayName": "ShowActivity - date"
     },
     "intentDetectionConfidence": 1,
-    "languageCode": "th"
+    "languageCode": "th",
+    "sentimentAnalysisResult": {
+      "queryTextSentiment": {
+        "score": 0.3,
+        "magnitude": 0.3
+      }
+    }
   },
   "originalDetectIntentRequest": {
     "source": "DIALOGFLOW_CONSOLE",

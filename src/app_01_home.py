@@ -49,19 +49,34 @@ appBlueprint = Blueprint("home",__name__)
     # with open("./src/message.json", errors='ignore') as read_file:
     #    data = json.load(read_file)
     # # query_result['parameters'][1]['showreminderdate']
-    # return data["queryResult"]['parameters']['showreminderdate'][0]
+    # kuy= data["queryResult"]['outputContexts'][checkJsonToday(data['queryResult'])]['parameters']['showreminderdate.original'][0]
+    # if kuy == 'เธงเธฑเธเธเธตเน':
+    #   data = 'kuy'
+    # else:
+    #   data = 'hee'
+    # return data
 @appBlueprint.route('/test2')
 def testcheck2():
+    RefFromDatabase = db.reference("/ActivityReminder") 
+    fulfillmentText =''
+    get = RefFromDatabase.get()
     data =''
     with open("./src/message.json", errors='ignore') as read_file:
        data = json.load(read_file)
     # query_result['parameters'][1]['showreminderdate']
-    kuy= data["queryResult"]['outputContexts'][checkJsonToday(data['queryResult'])]['parameters']['showreminderdate.original'][0]
-    if kuy == 'เธงเธฑเธเธเธตเน':
-      data = 'kuy'
+    datefromdialog = data["queryResult"]["parameters"]["date-time"]
+    datenew = str(datefromdialog).split("T")[0] 
+   
+    try:
+        get.keys()
+    except:
+        fulfillmentText = 'ไม่มีกิจกรรมที่คุณบันทึก'
     else:
-      data = 'hee'
-    return data
+        for x in get.keys():
+          if get[x]["date"] == datenew :
+            fulfillmentText +=' กิจกรรมของคุณคือ ' + str(get[x]["event"]) + " ตอนเวลา "+str(get[x]["time"])+datenew
+      
+    return fulfillmentText
 
 
 
@@ -699,11 +714,16 @@ def rejectOrder():
 
     if query_result.get('action') == 'ShowActivity.date' :
       RefFromDatabase = db.reference("/ActivityReminder") 
-      datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
+      datefromdialog = str(query_result["parameters"]["date-time"])
       datenew = str(datefromdialog).split("T")[0]
       get = RefFromDatabase.get()
-      for x in get.keys():
-        if get[x]["date"] == datenew :
+      try:
+        get.keys()
+      except:
+        fullfillmentText = 'ไม่มีกิจกรรมที่คุณบันทึก'
+      else:
+        for x in get.keys():
+          if get[x]["date"] == datenew :
             fullfillmentText +=' กิจกรรมของคุณคือ ' + str(get[x]["event"]) + " ตอนเวลา "+str(get[x]["time"])+datenew
       
     if fullfillmentText == '':
