@@ -52,8 +52,11 @@ appBlueprint = Blueprint("home",__name__)
     # return data["queryResult"]['parameters']['showreminderdate'][0]
 @appBlueprint.route('/test2')
 def testcheck2():
-
-    return testcheck("","")
+    todaydate = "2021-03-02T12:00:00+07:00"
+    change = datetime.fromisoformat(todaydate)
+    enddaydate = datetime.combine(change, datetime.min.time()) + timedelta(1)
+    newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
+    return testcheck(todaydate,newcheck)
 
 
 def testcheck(mintimeformDialog,maxtimeformDialog):
@@ -603,16 +606,21 @@ def rejectOrder():
         todaydate = datetime.now()
 
         enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
+        newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-        "fulfillmentText": testcheck(todaydate,enddaydate),
+        "fulfillmentText": testcheck(todaydate,newcheck),
         "displayText": '50',
         "source": "webhookdata"
       }
       else:
-        datefromdialogStart = datetime.combine(datefromdialog, datetime.min.time())
+        StringToDate = datetime.fromisoformat(datefromdialog)
+
+        datefromdialogStart = datetime.combine(StringToDate, datetime.min.time())
         enddaydate = datetime.combine(datefromdialogStart, datetime.min.time()) + timedelta(1)
+        startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
+        enddaydateformat = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-          "fulfillmentText": testcheck(datefromdialogStart,enddaydate),
+          "fulfillmentText": testcheck(startdateformat,enddaydateformat),
           "displayText": '50',
           "source": "webhookdata"
         }
