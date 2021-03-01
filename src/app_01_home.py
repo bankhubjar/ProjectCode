@@ -56,7 +56,12 @@ def testcheck2():
     with open("./src/message.json", errors='ignore') as read_file:
        data = json.load(read_file)
     # query_result['parameters'][1]['showreminderdate']
-    return str(data["queryResult"]['outputContexts'][0]['parameters']['showreminderdate.original'][0])
+    kuy= data["queryResult"]['outputContexts'][checkJsonToday(data['queryResult'])]['parameters']['showreminderdate.original'][0]
+    if kuy == 'เธงเธฑเธเธเธตเน':
+      data = 'kuy'
+    else:
+      data = 'hee'
+    return data
 
 
 
@@ -612,13 +617,13 @@ def rejectOrder():
     if query_result.get('action') == 'showReminder.Date':
       datefromdialog =  query_result['parameters']['showreminderdate'][0]
       resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original'][0]
-      if resultcheck == "เธงเธฑเธเธเธตเน":
+      if resultcheck == 'เธงเธฑเธเธเธตเน':
         todaydate = datetime.now()
         enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
         newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-        "fulfillmentText": testcheck(startdateformat,newcheck),
+        "fulfillmentText": testcheck(startdateformat,newcheck)+"wtf",
         "displayText": '50',
         "source": "webhookdata"
       }
