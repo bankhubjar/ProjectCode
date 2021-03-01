@@ -700,7 +700,7 @@ def rejectOrder():
     if query_result.get('action') == 'ShowActivity.date' :
       RefFromDatabase = db.reference("/ActivityReminder") 
       datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
-      datenew = str(datefromdialog).split(" ")[0]
+      datenew = str(datefromdialog).split("T")[0]
       get = RefFromDatabase.get()
       for x in get.keys():
         if get[x]["date"] == datenew :
