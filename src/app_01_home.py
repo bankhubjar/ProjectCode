@@ -52,9 +52,12 @@ appBlueprint = Blueprint("home",__name__)
     # return data["queryResult"]['parameters']['showreminderdate'][0]
 @appBlueprint.route('/test2')
 def testcheck2():
-   todaydate = datetime.now()
-   startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
-   return startdateformat
+    data =''
+    with open("./src/message.json", errors='ignore') as read_file:
+       data = json.load(read_file)
+    # query_result['parameters'][1]['showreminderdate']
+    return str(data["queryResult"]['outputContexts'][0]['parameters']['showreminderdate.original'][0])
+
 
 
 def testcheck(mintimeformDialog,maxtimeformDialog):
@@ -608,8 +611,8 @@ def rejectOrder():
 
     if query_result.get('action') == 'showReminder.Date':
       datefromdialog =  query_result['parameters']['showreminderdate'][0]
-      resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original']
-      if resultcheck == "วันนี้":
+      resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original'][0]
+      if resultcheck == "เธงเธฑเธเธเธตเน":
         todaydate = datetime.now()
         enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
