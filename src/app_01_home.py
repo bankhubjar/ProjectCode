@@ -161,7 +161,7 @@ def checkJsonForCalendar(data):
     return ides
 
 def checkJsonForActivity(data):
-  kiki = 0
+    kiki = 0
     ides = 0
     while ides < len(data['outputContexts']):
       try:
