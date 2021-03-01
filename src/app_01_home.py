@@ -603,10 +603,10 @@ def rejectOrder():
     if query_result.get('action') == 'activityTime':
       activityname = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activityname']
       activitytime = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activitytime']
-      datetime = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['date']
-      date = datetime.split("T")[0]
+      datetimea = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['date']
+      date = datetimea.split("T")[0]
       time = activitytime.split("T")[1].split("+")[0]
-      temptime = datetime.split("T")[0]+"T"+activitytime.split("T")[1]
+      temptime = datetimea.split("T")[0]+"T"+activitytime.split("T")[1]
       fulfillmentText = "คุณได้บันทึกกิจกรรม "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
