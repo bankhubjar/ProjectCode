@@ -617,7 +617,7 @@ def rejectOrder():
     if query_result.get('action') == 'showReminder.Date':
       datefromdialog =  query_result['parameters']['showreminderdate'][0]
       resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original'][0]
-      if resultcheck == 'เธงเธฑเธเธเธตเน':
+      if resultcheck == 'วันนี้':
         todaydate = datetime.now()
         enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
