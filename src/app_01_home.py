@@ -187,8 +187,6 @@ def checkJsonForItem(data,informname):
           break
     return ides
 
-
-
 def checkService():
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -409,8 +407,8 @@ def rejectOrder():
       event = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["any"]
       datetimeq = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["datetime"]
       date = datetimeq.split("T")[0]
-      time = datetimeq.split("T")[1]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+date+time
+      time = datetimeq.split("T")[1].split("+")[0]
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
       time_zone = 'Asia/Bangkok'
@@ -575,7 +573,8 @@ def rejectOrder():
             "fulfillmentText": testcheck("",""),
             "displayText": '50',
             "source": "webhookdata"
-      } 
+      }
+
     if query_result.get('action') == 'showReminder.Date':
       datefromdialog =  query_result['parameters']['showreminderdate'][0]
       return {
@@ -583,9 +582,67 @@ def rejectOrder():
         "displayText": '50',
         "source": "webhookdata"
       }
+
+    if query_result.get('action') == 'activityTime':
+      activityname = query_result['outputContexts'][0]['parameters']['activityname']
+      activitytime = query_result['outputContexts'][0]['parameters']['activitytime']
+      date = activitytime.split("T")[0]
+      time = activitytime.split("T")[1].split("+")[0]
+      fulfillmentText = "คุณได้บันทึกกิจกรรม "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
+      RefFromDatabase = db.reference("/ActivityReminder") 
+      count = 0
+      time_zone = 'Asia/Bangkok'
+      eventcontent = {
+        'summary': activityname,
+        'description': activityname,
+        'start': {
+          'dateTime': activitytime,
+          'timeZone': time_zone,
+        },
+        'end': {
+          'dateTime': activitytime,
+          'timeZone': time_zone,
+        },
+        'reminders': {
+          'useDefault': False,
+          'overrides': [
+            {'method': 'email', 'minutes': 24 * 60},
+            {'method': 'popup', 'minutes': 10},
+          ],
+        },
+      }
+      Data = RefFromDatabase.get()
+      try:
+        Data.keys()
+      except:
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
+        ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
+        ##      
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        }
+      else:
+        for key in Data.keys(): count += 1
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
+        ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
+        ##
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        } 
+
+
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
             "source": "webhookdata"
       }  
+    
 
