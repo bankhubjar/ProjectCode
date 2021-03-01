@@ -623,7 +623,7 @@ def rejectOrder():
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
         newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-        "fulfillmentText": testcheck(startdateformat,newcheck)+"wtf"+str(todaydate)+"test"+startdateformat,
+        "fulfillmentText": testcheck(startdateformat,newcheck),
         "displayText": '50',
         "source": "webhookdata"
       }
@@ -635,7 +635,7 @@ def rejectOrder():
         startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
         enddaydateformat = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-          "fulfillmentText": testcheck(startdateformat,enddaydateformat)+""+resultcheck,
+          "fulfillmentText": testcheck(startdateformat,enddaydateformat),
           "displayText": '50',
           "source": "webhookdata"
         }
@@ -698,8 +698,14 @@ def rejectOrder():
         } 
 
     if query_result.get('action') == 'ShowActivity.date' :
+      RefFromDatabase = db.reference("/ActivityReminder") 
       datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
-
+      datenew = str(datefromdialog).split(" ")[0]
+      get = RefFromDatabase.get()
+      for x in get.keys():
+        if get[x]["date"] == datenew :
+            fullfillmentText +=' กิจกรรมของคุณคือ ' + str(get[x]["event"]) + " ตอนเวลา "+str(get[x]["time"])+datenew
+      
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
     return {
