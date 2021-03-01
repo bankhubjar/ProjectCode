@@ -15,7 +15,7 @@ from firebase_admin import db
 import os
 
 #Time
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 # Googlecalendar Api
@@ -45,14 +45,16 @@ ref = db.reference('/users')
 firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.firebaseio.com/', None)
 import json
 appBlueprint = Blueprint("home",__name__)
-
+    # data =''
+    # with open("./src/message.json", errors='ignore') as read_file:
+    #    data = json.load(read_file)
+    # # query_result['parameters'][1]['showreminderdate']
+    # return data["queryResult"]['parameters']['showreminderdate'][0]
 @appBlueprint.route('/test2')
 def testcheck2():
-    data =''
-    with open("./src/message.json", errors='ignore') as read_file:
-       data = json.load(read_file)
-    # query_result['parameters'][1]['showreminderdate']
-    return data["queryResult"]['parameters']['showreminderdate'][0]
+
+    return testcheck("","")
+
 
 def testcheck(mintimeformDialog,maxtimeformDialog):
     ful = ''
@@ -187,7 +189,19 @@ def checkJsonForItem(data,informname):
           break
     return ides
 
-
+def checkJsonToday(data):
+    kiki = 0
+    ides = 0
+    while ides < len(data['outputContexts']):
+      try:
+        datet = data['outputContexts'][ides]["parameters"]["showreminderdate.original"]
+      except:
+        kiki+= 1
+        ides+=1
+      else:
+        datet = data['outputContexts'][ides]["parameters"]["showreminderdate.original"]
+        break
+    return ides
 
 def checkService():
     creds = None
@@ -560,17 +574,6 @@ def rejectOrder():
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
     if query_result.get('action') == 'showReminder.All':
-      #  RefEvent = db.reference("/EventReminder")
-      #  getEvent = RefEvent.get()
-      #  Event = []
-      #  a=''
-      #  try:
-      #   getEvent.keys()
-      #  except:
-      #    fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
-      #  else:
-      #    for x in getEvent.keys():
-      #      fullfillmentText='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
        return {
             "fulfillmentText": testcheck("",""),
             "displayText": '50',
@@ -578,11 +581,23 @@ def rejectOrder():
       } 
     if query_result.get('action') == 'showReminder.Date':
       datefromdialog =  query_result['parameters']['showreminderdate'][0]
-      return {
-        "fulfillmentText": testcheck(datefromdialog,""),
+      if checkJsonToday(query_result) == "วันนี้":
+        todaydate = datetime.now()
+
+        enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
+        return {
+        "fulfillmentText": testcheck(todaydate,enddaydate),
         "displayText": '50',
         "source": "webhookdata"
       }
+      else:
+        datefromdialogStart = datetime.combine(datefromdialog, datetime.min.time())
+        enddaydate = datetime.combine(datefromdialogStart, datetime.min.time()) + timedelta(1)
+        return {
+          "fulfillmentText": testcheck(datefromdialogStart,enddaydate),
+          "displayText": '50',
+          "source": "webhookdata"
+        }
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
