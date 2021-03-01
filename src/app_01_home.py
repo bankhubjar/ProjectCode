@@ -49,35 +49,12 @@ appBlueprint = Blueprint("home",__name__)
     # with open("./src/message.json", errors='ignore') as read_file:
     #    data = json.load(read_file)
     # # query_result['parameters'][1]['showreminderdate']
-    # kuy= data["queryResult"]['outputContexts'][checkJsonToday(data['queryResult'])]['parameters']['showreminderdate.original'][0]
-    # if kuy == 'เธงเธฑเธเธเธตเน':
-    #   data = 'kuy'
-    # else:
-    #   data = 'hee'
-    # return data
+    # return data["queryResult"]['parameters']['showreminderdate'][0]
 @appBlueprint.route('/test2')
 def testcheck2():
-    RefFromDatabase = db.reference("/ActivityReminder") 
-    fulfillmentText =''
-    get = RefFromDatabase.get()
-    data =''
-    with open("./src/message.json", errors='ignore') as read_file:
-       data = json.load(read_file)
-    # query_result['parameters'][1]['showreminderdate']
-    datefromdialog = data["queryResult"]["parameters"]["date-time"]
-    datenew = str(datefromdialog).split("T")[0] 
-   
-    try:
-        get.keys()
-    except:
-        fulfillmentText = 'ไม่มีกิจกรรมที่คุณบันทึก'
-    else:
-        for x in get.keys():
-          if get[x]["date"] == datenew :
-            fulfillmentText +=' กิจกรรมของคุณคือ ' + str(get[x]["event"]) + " ตอนเวลา "+str(get[x]["time"])+datenew
-      
-    return fulfillmentText
-
+   todaydate = datetime.now()
+   startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
+   return startdateformat
 
 
 def testcheck(mintimeformDialog,maxtimeformDialog):
@@ -176,7 +153,6 @@ def checkJsonForCalendar(data):
       try:
         aany = data['outputContexts'][ides]["parameters"]["any"]
         datetime = data['outputContexts'][ides]["parameters"]["datetime"]
- 
       except:
         kiki+= 1
         ides+=1
@@ -631,14 +607,14 @@ def rejectOrder():
 
     if query_result.get('action') == 'showReminder.Date':
       datefromdialog =  query_result['parameters']['showreminderdate'][0]
-      resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original'][0]
-      if resultcheck == 'วันนี้':
-        todaydate = datetime.now(tz)
+      resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original']
+      if resultcheck == "วันนี้":
+        todaydate = datetime.now()
         enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
         newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
         return {
-        "fulfillmentText": testcheck(startdateformat,newcheck),
+        "fulfillmentText": testcheck(todaydate,newcheck),
         "displayText": '50',
         "source": "webhookdata"
       }
@@ -691,9 +667,9 @@ def rejectOrder():
       except:
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
         ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
-        # ##      
-        # service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
-        # ##
+        ##      
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
@@ -703,9 +679,9 @@ def rejectOrder():
         for key in Data.keys(): count += 1
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
         ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
-        # ##
-        # service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
-        # ##
+        ##
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
@@ -713,19 +689,8 @@ def rejectOrder():
         } 
 
     if query_result.get('action') == 'ShowActivity.date' :
-      RefFromDatabase = db.reference("/ActivityReminder") 
-      datefromdialog = str(query_result["parameters"]["date-time"])
-      datenew = str(datefromdialog).split("T")[0]
-      get = RefFromDatabase.get()
-      try:
-        get.keys()
-      except:
-        fullfillmentText = 'ไม่มีกิจกรรมที่คุณบันทึก'
-      else:
-        for x in get.keys():
-          if get[x]["date"] == datenew :
-            fullfillmentText +=' กิจกรรมของคุณคือ ' + str(get[x]["event"]) + " ตอนเวลา "+str(get[x]["time"])+datenew
-      
+      datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
+
     if fullfillmentText == '':
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
     return {
