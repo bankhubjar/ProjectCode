@@ -1,4 +1,4 @@
 *.pyc
 __pycache__/
-# *.pickle
-# token.pickle
+*.pickle
+token.pickle

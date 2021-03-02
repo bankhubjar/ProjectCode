@@ -260,6 +260,18 @@ def callCa(service):
         start.append(text+''+str(event['summary'])) 
     return start    
 
+def savehistory(service):
+  DBRef = db.reference("/ShowHistory")
+  deta = DBRef.get()
+  newhistory = DBRef.child(service)
+  try:
+    data[service]
+  except:
+    newhistory.set({service : 1})
+  else: 
+    oldhistory = data
+    newhistory.set({service : oldhistory[service]+1})
+
 @appBlueprint.route('/test1')
 def wtf():
        fullfillmentText=''
@@ -446,6 +458,7 @@ def rejectOrder():
         ## 
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
+        savehistory("reminder")
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
@@ -458,6 +471,7 @@ def rejectOrder():
         ##
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
+        savehistory("reminder")
       return {
         "fulfillmentText": fulfillmentText,
         "displayText": '25',
@@ -468,10 +482,8 @@ def rejectOrder():
       try:
         NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyname"]
         RefFromDatabase = db.reference("/RememberV2")
-
-        RefNo2 = db.reference("/ShowHistory")
-        temp = RefNo2.get()
-        RefNo2.update({'showAllspecifyname' :temp['showAllspecifyname'] + 1 })
+        
+        savehistory('showAllspecifyname')
 
         get = RefFromDatabase.get()
         for x in get.keys():
@@ -485,11 +497,9 @@ def rejectOrder():
       try:
         RefFromDatabase = db.reference("/RememberV2/Home") 
         get = RefFromDatabase.get()
-        ##
-        RefNo2 = db.reference("/ShowHistory")
-        temp = RefNo2.get()
-        RefNo2.update({'showAllrequestNo' :temp['showAllrequestNo'] + 1 })
 
+        savehistory("showAllrequestNo")
+        
         for x in get.keys():
           fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
       except:
@@ -501,9 +511,7 @@ def rejectOrder():
         item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2") 
         ##
-        RefNo2 = db.reference("/ShowHistory")
-        temp = RefNo2.get()
-        RefNo2.update({'showSpecifyInform' :temp['showSpecifyInform'] + 1 })
+        savehistory("showSpecifyInform")
 
         get = RefFromDatabase.get()
         for name in get.keys():
@@ -519,9 +527,7 @@ def rejectOrder():
         item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2/Home") 
         ##
-        RefNo2 = db.reference("/ShowHistory") 
-        temp = RefNo2.get()
-        RefNo2.update({'specifyItemnameNoInform' :temp['specifyItemnameNoInform'] + 1 })
+        savehistory("specifyItemnameNoInform")
 
         get = RefFromDatabase.get()
         for x in get.keys():
@@ -529,35 +535,10 @@ def rejectOrder():
             fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
       except:
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-
-    if query_result.get('action') == 'showHistory':
-      try:
-        ref1 = db.reference("/ShowHistory").get()
-        ref2 = db.reference("/RememberV2/Home") 
-        get2 = ref2.get()
-        showallno = 0
-        for x in get2.keys():
-          showallno += 1
-        ref3 = db.reference("/RememberV2")
-        get3 = ref3.get()
-        showall = 0
-        temp = "Home"
-        for x in get3.keys():
-          if x != temp:
-            for y in get3[x].keys():
-              showall += 1
-        a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
-        b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
-        c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
-        d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
-        e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
-        f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
-        fullfillmentText = a+b+c+d+e+f 
-      except:
-        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-    
+  
     if query_result.get('action') == 'showReminder.All':
-       return {
+      savehistory("showReminder.All")
+      return {
             "fulfillmentText": testcheck("",""),
             "displayText": '50',
             "source": "webhookdata"
@@ -571,6 +552,7 @@ def rejectOrder():
         enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
         newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
+        savehistory("showReminder.Date")
         return {
         "fulfillmentText": testcheck(todaydate,newcheck),
         "displayText": '50',
@@ -583,6 +565,7 @@ def rejectOrder():
         enddaydate = datetime.combine(datefromdialogStart, datetime.min.time()) + timedelta(1)
         startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
         enddaydateformat = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
+        savehistory("showReminder.Date")
         return {
           "fulfillmentText": testcheck(startdateformat,enddaydateformat),
           "displayText": '50',
@@ -636,6 +619,7 @@ def rejectOrder():
         ##      
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
+        savehistory("activity")
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
@@ -648,6 +632,7 @@ def rejectOrder():
         ##
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
+        savehistory("activity")
         return {
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
@@ -656,8 +641,45 @@ def rejectOrder():
 
     if query_result.get('action') == 'ShowActivity.date' :
       datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
+      savehistory("showactivity")
 
-    if fullfillmentText == '':
+    if query_result.get('action') == 'showHistory':
+      savehistory("viewhistory")
+      try:
+        ref1 = db.reference("/ShowHistory").get()
+        ################
+        ref2 = db.reference("/RememberV2/Home") 
+        get2 = ref2.get()
+        showallno = 0
+        for x in get2.keys():
+          showallno += 1
+        ################
+        ref3 = db.reference("/RememberV2")
+        get3 = ref3.get()
+        showall = 0
+        temp = "Home"
+        for x in get3.keys():
+          if x != temp:
+            for y in get3[x].keys():
+              showall += 1
+        ################
+        a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
+        b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
+        c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
+        d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
+        e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
+        f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
+        g=' คุณใช้คำสั่งเตือนความจำ '+str(ref1["reminder"])+' ครั้ง'
+        h=' คุณใช้คำสั่งแสดงเตือนความจำทั้งหมด '+str(ref1["showReminder.All"])+' ครั้ง'
+        i=' คุณใช้คำสั่งแสดงเตือนความจำประจำวัน '+str(ref1["showReminder.Date"])+' ครั้ง'
+        j=' คุณใช้คำสั่งบันทึกกิจกรรม '+str(ref1["activity"])+' ครั้ง'
+        k=' คุณใช้คำสั่งแสดงกิจกรรมประจำวัน '+str(ref1["showactivity"])+' ครั้ง'
+        l=' คุณใช้คำสั่งแสดงประวัดการใช้งาน '+str(ref1["viewhistory"])+' ครั้ง'
+        fullfillmentText = a+b+c+d+e+f+g+h+i+j+k+l
+      except:
+        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
+  
+    if fullfillmentText == null:
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
     return {
             "fulfillmentText": fullfillmentText,
