@@ -152,13 +152,13 @@ def checkJsonForCalendar(data):
     while ides < len(data['outputContexts']):
       try:
         aany = data['outputContexts'][ides]["parameters"]["any"]
-        datetime = data['outputContexts'][ides]["parameters"]["datetime"]
+        datetime = data['outputContexts'][ides]["parameters"]["date"]
       except:
         kiki+=1
         ides+=1
       else:
         aany = data['outputContexts'][ides]["parameters"]["any"]
-        dateime = data['outputContexts'][ides]["parameters"]["datetime"]
+        dateime = data['outputContexts'][ides]["parameters"]["date"]
         break
     return ides
 
