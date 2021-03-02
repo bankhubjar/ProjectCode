@@ -160,7 +160,7 @@ def checkJsonForCalendar(data):
         aany = data['outputContexts'][ides]["parameters"]["any"]
         dateime = data['outputContexts'][ides]["parameters"]["datetime"]
         break
-    return ides-1
+    return ides
 
 def checkJsonForActivity(data):
     kiki = 0
@@ -591,12 +591,17 @@ def rejectOrder():
 
     if query_result.get('action') == 'activityTime':
       activityname = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activityname']
-      activitytime = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activitytime']
-      datetimea = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['date']
-      date = datetimea.split("T")[0]
-      time = activitytime.split("T")[1].split("+")[0]
-      temptime = datetimea.split("T")[0]+"T"+activitytime.split("T")[1]
-      fulfillmentText = "คุณได้บันทึกกิจกรรม "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
+      if query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"] == "" :
+        datewithtime = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["activitytime"]
+        date = datewithtime.split("T")[0]
+        time = datewithtime.split("T")[1].split("+")[0]
+        temptime = datewithtime
+      else :
+        dateonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"]
+        timeonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["activitytime"]
+        date = dateonly.split("T")[0]
+        time = timeonly.split("T")[1].split("+")[0]
+        temptime = dateonly.split("T")[0]+"T"+timeonly.split("T")[1]
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
       result = checkService().calendarList().list().execute()
