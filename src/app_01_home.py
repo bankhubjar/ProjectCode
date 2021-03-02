@@ -399,7 +399,7 @@ def rejectOrder():
        } 
 
     if query_result.get('action') == 'reminder.Time':
-      event = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["any.original"]
+      event = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["any"]
       if query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"] == "" :
         datewithtime = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["time"]
         date = datewithtime.split("T")[0]
@@ -415,6 +415,7 @@ def rejectOrder():
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
       result = checkService().calendarList().list().execute()
+      service = checkService()
       calendar_id = result['items'][2]['id']
       time_zone = 'Asia/Bangkok'
       eventcontent = {
@@ -442,8 +443,8 @@ def rejectOrder():
       except:
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
         ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
-        ##      
-        checkService().events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ## 
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
@@ -455,7 +456,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
         ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
         ##
-        checkService().events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
@@ -599,6 +600,7 @@ def rejectOrder():
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
       result = checkService().calendarList().list().execute()
+      service = checkService()
       calendar_id = result['items'][2]['id']
       time_zone = 'Asia/Bangkok'
       eventcontent = {
@@ -627,7 +629,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
         ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
         ##      
-        checkService().events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
@@ -639,7 +641,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
         ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
         ##
-        checkService().events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
