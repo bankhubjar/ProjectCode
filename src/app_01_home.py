@@ -414,7 +414,7 @@ def rejectOrder():
       fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
-      result = service.calendarList().list().execute()
+      result = checkService().calendarList().list().execute()
       calendar_id = result['items'][2]['id']
       time_zone = 'Asia/Bangkok'
       eventcontent = {
@@ -598,7 +598,7 @@ def rejectOrder():
       fulfillmentText = "คุณได้บันทึกกิจกรรม "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
-      result = service.calendarList().list().execute()
+      result = checkService().calendarList().list().execute()
       calendar_id = result['items'][2]['id']
       time_zone = 'Asia/Bangkok'
       eventcontent = {
