@@ -458,11 +458,11 @@ def rejectOrder():
       #   ##
       #   service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
       #   ##
-        return {
-          "fulfillmentText": fulfillmentText,
-          "displayText": '25',
-          "source": "webhookdata"
-        }
+      return {
+        "fulfillmentText": fulfillmentText,
+        "displayText": '25',
+        "source": "webhookdata"
+      }
              
     if query_result.get('action') == 'showAll..specifyname':
       try:
