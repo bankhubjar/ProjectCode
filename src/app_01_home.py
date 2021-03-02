@@ -437,27 +437,27 @@ def rejectOrder():
           ],
         },
       }
-      # Data = RefFromDatabase.get()
-      # try:
-      #   Data.keys()
-      # except:
-      #   ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
-      #   ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
-      #   ## 
-      #   service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
-      #   ##
-      #   return {
-      #     "fulfillmentText": fulfillmentText,
-      #     "displayText": '25',
-      #     "source": "webhookdata"
-      #   }
-      # else:
-      #   for key in Data.keys(): count += 1
-      #   ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
-      #   ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
-      #   ##
-      #   service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
-      #   ##
+      Data = RefFromDatabase.get()
+      try:
+        Data.keys()
+      except:
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
+        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
+        ## 
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
+        return {
+          "fulfillmentText": fulfillmentText,
+          "displayText": '25',
+          "source": "webhookdata"
+        }
+      else:
+        for key in Data.keys(): count += 1
+        ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
+        ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
+        ##
+        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        ##
       return {
         "fulfillmentText": fulfillmentText,
         "displayText": '25',
