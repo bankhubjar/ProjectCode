@@ -26,6 +26,8 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+import json
+
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 tz = pytz.timezone('Asia/Bangkok')
@@ -43,7 +45,7 @@ ref = db.reference('/users')
 
 
 firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.firebaseio.com/', None)
-import json
+
 appBlueprint = Blueprint("home",__name__)
     # data =''
     # with open("./src/message.json", errors='ignore') as read_file:
@@ -55,7 +57,6 @@ def testcheck2():
    todaydate = datetime.now()
    startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
    return startdateformat
-
 
 def testcheck(mintimeformDialog,maxtimeformDialog):
     ful = ''
@@ -321,7 +322,6 @@ def rejectOrder():
        RefFromDatabase = db.reference("/RememberV2/Home") 
        count = 0
        Deta = RefFromDatabase.get()
-
        try:
           Deta.keys()
        except: 
@@ -591,14 +591,14 @@ def rejectOrder():
 
     if query_result.get('action') == 'activityTime':
       activityname = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activityname']
-      if query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"] == "" :
-        datewithtime = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["activitytime"]
+      if query_result['outputContexts'][checkJsonForActivity(query_result)]["parameters"]["date"] == "" :
+        datewithtime = query_result['outputContexts'][checkJsonForActivity(query_result)]["parameters"]["activitytime"]
         date = datewithtime.split("T")[0]
         time = datewithtime.split("T")[1].split("+")[0]
         temptime = datewithtime
       else :
-        dateonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"]
-        timeonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["activitytime"]
+        dateonly = query_result['outputContexts'][checkJsonForActivity(query_result)]["parameters"]["date"]
+        timeonly = query_result['outputContexts'][checkJsonForActivity(query_result)]["parameters"]["activitytime"]
         date = dateonly.split("T")[0]
         time = timeonly.split("T")[1].split("+")[0]
         temptime = dateonly.split("T")[0]+"T"+timeonly.split("T")[1]
