@@ -221,27 +221,27 @@ def checkJsonToday(data):
     return ides
 
 def checkService():
-    creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
+  creds = None
+  # The file token.pickle stores the user's access and refresh tokens, and is
+  # created automatically when the authorization flow completes for the first
+  # time.
+  if os.path.exists('token.pickle'):
+      with open('token.pickle', 'rb') as token:
+          creds = pickle.load(token)
+  # If there are no (valid) credentials available, let the user log in.
+  if not creds or not creds.valid:
+      if creds and creds.expired and creds.refresh_token:
+          creds.refresh(Request())
+      else:
+          flow = InstalledAppFlow.from_client_secrets_file(
+              './src/credentials.json', scopes=SCOPES)
+          creds = flow.run_local_server(port=0)
+      # Save the credentials for the next run
+      with open('token.pickle', 'wb') as token:
+          pickle.dump(creds, token)
 
-        service = build('calendar', 'v3', credentials=creds)
-        return service
+  service = build('calendar', 'v3', credentials=creds)
+  return service
 
 def callCa(service):
     count = 0
@@ -277,25 +277,9 @@ def wtf():
 
 @appBlueprint.route('/calendar')
 def calendar():
-    creds = None
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                './src/credentials.json', scopes=SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
-
-    service = build('calendar', 'v3', credentials=creds)
+    service = checkService()
     result = service.calendarList().list().execute()
-    calendar_id = result['items'][0]['id']
+    calendar_id = result['items'][2]['id']
     # Call the Calendar API
     event = "bruh"
     datetimeq = "2021-02-27T15:00:00+07:00"
@@ -330,29 +314,6 @@ def rejectOrder():
     query_result = RequestJson.get('queryResult')
     DateMonthYear = CurrentTime.strftime("%d/%m/%Y")
     HourMinuteSecond = CurrentTime.strftime("%H:%M:%S")
-
-    creds = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                './src/credentials.json', scopes=SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
-
-    service = build('calendar', 'v3', credentials=creds)
-    result = service.calendarList().list().execute()
-    calendar_id = result['items'][0]['id']
 
     if query_result.get('action') == 'object.confirm.noUsername': 
        Place = query_result['outputContexts'][checkJson(query_result,"")]["parameters"]["place"]
@@ -438,21 +399,23 @@ def rejectOrder():
        } 
 
     if query_result.get('action') == 'reminder.Time':
-      event = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["any"]
+      event = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["any.original"]
       if query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"] == "" :
-        datewithtime = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["datetime"]
+        datewithtime = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["time"]
         date = datewithtime.split("T")[0]
         time = datewithtime.split("T")[1].split("+")[0]
         eventtime = datewithtime
       else :
         dateonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"]
-        timeonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["datetime"]
+        timeonly = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["time"]
         date = dateonly.split("T")[0]
         time = timeonly.split("T")[1].split("+")[0]
         eventtime = dateonly.split("T")[0]+"T"+timeonly.split("T")[1]
       fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
+      result = service.calendarList().list().execute()
+      calendar_id = result['items'][2]['id']
       time_zone = 'Asia/Bangkok'
       eventcontent = {
         'summary': event,
@@ -480,7 +443,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
         ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
         ##      
-        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        checkService().events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
@@ -492,7 +455,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
         ListToDb.set({"id":count+1,"event":event,"date":date,"time":time})
         ##
-        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        checkService().events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
@@ -534,10 +497,7 @@ def rejectOrder():
     if query_result.get('action') == 'showSpecify.inform':
       try:
         NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["informname"]
-        if "specifyItemName" in query_result:
-          item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
-        else:
-          item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
+        item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2") 
         ##
         RefNo2 = db.reference("/ShowHistory")
@@ -555,13 +515,10 @@ def rejectOrder():
 
     if query_result.get('action') == 'specifyItemname.no.inform':
       try:
-        if "specifyItemName" in query_result:
-          item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
-        else:
-          item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
+        item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2/Home") 
         ##
-        RefNo2 = db.reference("/ShowHistory")
+        RefNo2 = db.reference("/ShowHistory") 
         temp = RefNo2.get()
         RefNo2.update({'specifyItemnameNoInform' :temp['specifyItemnameNoInform'] + 1 })
 
@@ -641,6 +598,8 @@ def rejectOrder():
       fulfillmentText = "คุณได้บันทึกกิจกรรม "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
+      result = service.calendarList().list().execute()
+      calendar_id = result['items'][2]['id']
       time_zone = 'Asia/Bangkok'
       eventcontent = {
         'summary': activityname,
@@ -668,7 +627,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ 1")
         ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
         ##      
-        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        checkService().events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
@@ -680,7 +639,7 @@ def rejectOrder():
         ListToDb = RefFromDatabase.child("กิจกรรมที่ "+str(count+1))
         ListToDb.set({"id":count+1,"event":activityname,"date":date,"time":time})
         ##
-        service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
+        checkService().events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         return {
           "fulfillmentText": fulfillmentText,
