@@ -642,7 +642,7 @@ def rejectOrder():
       except:
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
   
-    if fullfillmentText == null:
+    if fullfillmentText == "":
       fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
     return {
             "fulfillmentText": fullfillmentText,
