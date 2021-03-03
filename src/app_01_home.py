@@ -574,7 +574,7 @@ def rejectOrder():
         date = dateonly.split("T")[0]
         time = timeonly.split("T")[1].split("+")[0]
         temptime = dateonly.split("T")[0]+"T"+timeonly.split("T")[1]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
       result = checkService().calendarList().list().execute()
