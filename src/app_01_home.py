@@ -346,6 +346,7 @@ def rejectOrder():
             ,"Date": DateMonthYear
             ,"time": HourMinuteSecond
          })
+          savehistory("Remember")
           return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
@@ -362,6 +363,7 @@ def rejectOrder():
             ,"Date": DateMonthYear
             ,"time": HourMinuteSecond
             })
+            savehistory("Remember")
          return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
@@ -388,6 +390,7 @@ def rejectOrder():
               ,"Date": DateMonthYear
               ,"time": HourMinuteSecond
           })
+            savehistory("Remember")
             return {
               "fulfillmentText": "บันทึกรายการเรียบร้อย",
               "displayText": '25',
@@ -404,6 +407,7 @@ def rejectOrder():
               ,"Date": DateMonthYear
               ,"time": HourMinuteSecond
               })
+          savehistory("Remember")
           return {
               "fulfillmentText": "บันทึกรายการเรียบร้อย",
               "displayText": '25',
@@ -585,6 +589,7 @@ def rejectOrder():
         date = dateonly.split("T")[0]
         time = timeonly.split("T")[1].split("+")[0]
         temptime = dateonly.split("T")[0]+"T"+timeonly.split("T")[1]
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
       result = checkService().calendarList().list().execute()
@@ -647,35 +652,10 @@ def rejectOrder():
       savehistory("viewhistory")
       try:
         ref1 = db.reference("/ShowHistory").get()
-        ################
-        ref2 = db.reference("/RememberV2/Home") 
-        get2 = ref2.get()
-        showallno = 0
-        for x in get2.keys():
-          showallno += 1
-        ################
-        ref3 = db.reference("/RememberV2")
-        get3 = ref3.get()
-        showall = 0
-        temp = "Home"
-        for x in get3.keys():
-          if x != temp:
-            for y in get3[x].keys():
-              showall += 1
-        ################
-        a='คุณได้บันทึกของที่ไม่มีเจ้าของไป '+str(showallno)+' ครั้ง '
-        b=',คุณได้บันทึกของที่มีเจ้าของไป '+str(showall) +' ครั้ง'
-        c=' และ คุณใช้คำสั่งแสดงของทั้งหมดที่ไม่มีชื่อเจ้าของ '+str(ref1["showAllrequestNo"])+' ครั้ง'
-        d=' คุณใช้คำสั่งแสดงของทั้งหมดที่มีชื่อเจ้าของ '+str(ref1["showAllspecifyname"])+' ครั้ง'
-        e=' คุณใช้คำสั่งแสดงตำแหน่งของที่ไม่มีชื่อเจ้าของ '+str(ref1["showSpecifyInform"])+' ครั้ง'
-        f=' คุณใช้คำสั่งแสดงตำแหน่งของที่มีชื่อเจ้าของ '+str(ref1["specifyItemnameNoInform"])+ ' ครั้ง'
-        g=' คุณใช้คำสั่งเตือนความจำ '+str(ref1["reminder"])+' ครั้ง'
-        h=' คุณใช้คำสั่งแสดงเตือนความจำทั้งหมด '+str(ref1["showReminder.All"])+' ครั้ง'
-        i=' คุณใช้คำสั่งแสดงเตือนความจำประจำวัน '+str(ref1["showReminder.Date"])+' ครั้ง'
-        j=' คุณใช้คำสั่งบันทึกกิจกรรม '+str(ref1["activity"])+' ครั้ง'
-        k=' คุณใช้คำสั่งแสดงกิจกรรมประจำวัน '+str(ref1["showactivity"])+' ครั้ง'
-        l=' คุณใช้คำสั่งแสดงประวัดการใช้งาน '+str(ref1["viewhistory"])+' ครั้ง'
-        fullfillmentText = a+b+c+d+e+f+g+h+i+j+k+l
+        a='คุณใช้คำสั่งบันทึกของ '+str(ref1["Remember"])+' ครั้ง '
+        b='คุณใช้คำสั่งเตือนความจำ '+str(ref1["reminder"])+' ครั้ง '
+        c='คุณใช้คำสั่งบันทึกกิจกรรม '+str(ref1["activity"])+' ครั้ง'
+        fullfillmentText = a+b+c
       except:
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
   
