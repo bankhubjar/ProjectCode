@@ -263,14 +263,13 @@ def callCa(service):
 def savehistory(service):
   DBRef = db.reference("/ShowHistory")
   deta = DBRef.get()
-  newhistory = DBRef.child(service)
   try:
     data[service]
   except:
-    newhistory.set({service : 1})
+    DBRef.set({service : 1})
   else: 
     oldhistory = data
-    newhistory.set({service : oldhistory[service]+1})
+    DBRef.set({service : oldhistory[service]+1})
 
 @appBlueprint.route('/test1')
 def wtf():
