@@ -629,7 +629,18 @@ def rejectOrder():
         } 
 
     if query_result.get('action') == 'ShowActivity.date' :
-      datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
+      RefFromDatabase = db.reference("/ActivityReminder") 
+      datefromdialog = str(query_result["parameters"]["date-time"])
+      datenew = str(datefromdialog).split("T")[0]
+      get = RefFromDatabase.get()
+      try:
+        get.keys()
+      except:
+        fullfillmentText = 'ไม่มีกิจกรรมที่คุณบันทึก'
+      else:
+        for x in get.keys():
+          if get[x]["date"] == datenew :
+            fullfillmentText +=' กิจกรรมของคุณคือ ' + str(get[x]["event"]) + " ตอนเวลา "+str(get[x]["time"])+datenew
 
     if query_result.get('action') == 'showHistory':
       try:
