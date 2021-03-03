@@ -346,16 +346,16 @@ def rejectOrder():
             ,"Date": DateMonthYear
             ,"time": HourMinuteSecond
          })
-          savehistory("Remember")
+          savehistory("remember")
           return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
           } 
        else:
-         for key in Deta.keys(): count+= 1
-         ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
-         ListToDB.set({
+          for key in Deta.keys(): count+= 1
+          ListToDB = RefFromDatabase.child("รายการที่"+str(count+1))
+          ListToDB.set({
             "amonut":"1"
             ,"id":count+1
             ,"item":objname
@@ -363,8 +363,8 @@ def rejectOrder():
             ,"Date": DateMonthYear
             ,"time": HourMinuteSecond
             })
-            savehistory("Remember")
-         return {
+          savehistory("remember")
+          return {
             "fulfillmentText": "บันทึกรายการเรียบร้อย",
             "displayText": '25',
             "source": "webhookdata"
@@ -390,7 +390,7 @@ def rejectOrder():
               ,"Date": DateMonthYear
               ,"time": HourMinuteSecond
           })
-            savehistory("Remember")
+            savehistory("remember")
             return {
               "fulfillmentText": "บันทึกรายการเรียบร้อย",
               "displayText": '25',
@@ -407,7 +407,7 @@ def rejectOrder():
               ,"Date": DateMonthYear
               ,"time": HourMinuteSecond
               })
-          savehistory("Remember")
+          savehistory("remember")
           return {
               "fulfillmentText": "บันทึกรายการเรียบร้อย",
               "displayText": '25',
@@ -486,9 +486,6 @@ def rejectOrder():
       try:
         NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyname"]
         RefFromDatabase = db.reference("/RememberV2")
-        
-        savehistory('showAllspecifyname')
-
         get = RefFromDatabase.get()
         for x in get.keys():
           if x == NameUserser:
@@ -501,9 +498,6 @@ def rejectOrder():
       try:
         RefFromDatabase = db.reference("/RememberV2/Home") 
         get = RefFromDatabase.get()
-
-        savehistory("showAllrequestNo")
-        
         for x in get.keys():
           fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
       except:
@@ -514,9 +508,6 @@ def rejectOrder():
         NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["informname"]
         item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2") 
-        ##
-        savehistory("showSpecifyInform")
-
         get = RefFromDatabase.get()
         for name in get.keys():
           if name == NameUserser:
@@ -530,9 +521,6 @@ def rejectOrder():
       try:
         item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2/Home") 
-        ##
-        savehistory("specifyItemnameNoInform")
-
         get = RefFromDatabase.get()
         for x in get.keys():
           if get[x]["item"] == item :
@@ -541,7 +529,6 @@ def rejectOrder():
         fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
   
     if query_result.get('action') == 'showReminder.All':
-      savehistory("showReminder.All")
       return {
             "fulfillmentText": testcheck("",""),
             "displayText": '50',
@@ -556,7 +543,6 @@ def rejectOrder():
         enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
         startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
         newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
-        savehistory("showReminder.Date")
         return {
         "fulfillmentText": testcheck(todaydate,newcheck),
         "displayText": '50',
@@ -569,7 +555,6 @@ def rejectOrder():
         enddaydate = datetime.combine(datefromdialogStart, datetime.min.time()) + timedelta(1)
         startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
         enddaydateformat = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
-        savehistory("showReminder.Date")
         return {
           "fulfillmentText": testcheck(startdateformat,enddaydateformat),
           "displayText": '50',
@@ -646,10 +631,8 @@ def rejectOrder():
 
     if query_result.get('action') == 'ShowActivity.date' :
       datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
-      savehistory("showactivity")
 
     if query_result.get('action') == 'showHistory':
-      savehistory("viewhistory")
       try:
         ref1 = db.reference("/ShowHistory").get()
         a='คุณใช้คำสั่งบันทึกของ '+str(ref1["Remember"])+' ครั้ง '
