@@ -244,10 +244,10 @@ def savehistory(service):
   try:
     data[service]
   except:
-    DBRef.child(service).set({service : 1})
+    DBRef.update({service : 1})
   else: 
     oldhistory = data
-    DBRef.update({service : oldhistory[service][service]+1})
+    DBRef.update({service : oldhistory[service]+1})
 
 
 # ------------------------------------------------------------------------------------# 
