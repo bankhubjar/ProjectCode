@@ -104,7 +104,6 @@ def testcheck(mintimeformDialog,maxtimeformDialog):
     for x in start:
       ful += x 
     return str(ful)
-
         
 def checkJson(data,name):
     kiki = 0
@@ -256,7 +255,7 @@ def savehistory(service):
   try:
     data[service]
   except:
-    DBRef.set({service : 1})
+    DBRef.push({service : 1})
   else: 
     oldhistory = data
     DBRef.set({service : oldhistory[service]+1})
@@ -575,7 +574,6 @@ def rejectOrder():
       }
       else:
         StringToDate = datetime.fromisoformat(datefromdialog)
-
         datefromdialogStart = datetime.combine(StringToDate, datetime.min.time())
         enddaydate = datetime.combine(datefromdialogStart, datetime.min.time()) + timedelta(1)
         startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
