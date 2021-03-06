@@ -610,9 +610,9 @@ def rejectOrder():
       try:
         ref1 = db.reference("/ShowHistory").get()
         a='<s>คุณใช้คำสั่งจดจำสิ่งของ  <break time="300ms"/> <say-as interpret-as="cardinal">'+str(ref1["Remember"])+'<break time="300ms"/></say-as> ครั้ง </s>'
-        b='<s>คุณใช้คำสั่งเตือนความจำ <break time="300ms"/><say-as interpret-as="cardinal">'+str(ref1["reminder"])+'<break time="300ms"/></say-as> ครั้ง </s>'
+        # b='<s>คุณใช้คำสั่งเตือนความจำ <break time="300ms"/><say-as interpret-as="cardinal">'+str(ref1["reminder"])+'<break time="300ms"/></say-as> ครั้ง </s>'
         c='<s>คุณใช้คำสั่งบันทึกกิจกรรม <break time="300ms"/><say-as interpret-as="cardinal">'+str(ref1["activity"])+'<break time="300ms"/></say-as> ครั้ง </s>'
-        fullfillmentText = '<speak>'+a+b+c+'</speak>'
+        fullfillmentText = '<speak>'+a+c+'</speak>'
       except:
         fullfillmentText = 'ยังไม่มีประวัติการใช้งานเลยเจ้าค่ะ'
   
