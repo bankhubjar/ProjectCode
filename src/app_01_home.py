@@ -605,7 +605,7 @@ def rejectOrder():
       else:
         for x in get.keys():
           if get[x]["date"] == datenew :
-            textresponse +='<s><break time="200ms"/> '+ str(get[x]["event"])  + '<break time="200ms"/> ตอนเวลา '+str(get[x]["time"])+'<say-as interpret-as="date" format="yyyymmdd" detail="1">'+datenew+ '</say-as>break time="300ms"/> </s>'+" "     
+            textresponse +='<s><break time="200ms"/> '+ str(get[x]["event"])  + '<break time="200ms"/> ตอนเวลา '+str(get[x]["time"])+'<say-as interpret-as="date" format="yyyymmdd" detail="1">'+datenew+ '</say-as> <break time="300ms"/> </s>'+" "     
             fullfillmentText = '<speak><p>กิจกรรมของคุณคือ'+ textresponse+'เจ้าค่ะ</p></speak>'
             
     if query_result.get('action') == 'showHistory':
