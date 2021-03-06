@@ -165,7 +165,7 @@ def checkJsonForActivity(data):
 
 def checkJsonForItem(data,informname):
     jsonIndex = 0
-    if not informname:
+    if informname == "informname":
       while jsonIndex < len(data['outputContexts']):
         try:
           informname = data['outputContexts'][jsonIndex]["parameters"]["informname"]
