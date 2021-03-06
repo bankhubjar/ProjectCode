@@ -241,8 +241,8 @@ def callCa(service):
 def savehistory(service):
   DBRef = db.reference("/ShowHistory")
   deta = DBRef.get()
-  if service in data:
-    oldhistory = data
+  if service in deta:
+    oldhistory = deta
     DBRef.update({service : oldhistory[service]+1})
   else: 
     DBRef.update({service : 1})
