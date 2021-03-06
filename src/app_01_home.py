@@ -56,7 +56,6 @@ appBlueprint = Blueprint("home",__name__)
 
 def testcheck(mintimeformDialog,maxtimeformDialog):
     ful = ''
-    i = 0
     start =[]
     now = ''
     """Shows basic usage of the Google Calendar API.
@@ -97,118 +96,108 @@ def testcheck(mintimeformDialog,maxtimeformDialog):
     events = events_result.get('items', [])
 
     if not events:
-        start.append('ไม่มีกิจกรรมแม้แต่นิดเดียวเลยเจ้าค่ะ')
+        start.append('ไม่มีการแจ้งเตือนแม้แต่นิดเดียวเลยเจ้าค่ะ <break time="200ms"/> ')
     for event in events:
         TextResponse = event['start'].get('dateTime', event['start'].get('date'))
-        start.append('การแจ้งเตือนของคุณมี '+event['summary']+' ตอน '+str(TextResponse.split("T")[0])+' เวลา '+str(TextResponse.split("T")[1].split("+")[0])+'')
+        start.append('<s>'+event['summary']+'  <break time="200ms"/> ตอน '+'<say-as interpret-as="date" format="yyyymmdd" detail="1">'+str(TextResponse.split("T")[0])+'</say-as><break time="200ms"/> เวลา '+str(TextResponse.split("T")[1].split("+")[0])+'<break time="200ms"/> </s>')
     for x in start:
       ful += x 
-    return str(ful)
+    return str('<speak><p> การแจ้งเตือนของคุณมี '+ful+'เจ้าค่ะ</p></speak>')
+
         
-def checkJson(data,name):
-    kiki = 0
-    ides = 0
-    if name:
-      while ides < len(data['outputContexts']):
+def checkJson(data,name):   
+    jsonIndex = 0
+    if not name:
+      while jsonIndex < len(data['outputContexts']):
         try:
-          NameUser = data['outputContexts'][ides]["parameters"]["uname"]
-          Place = data['outputContexts'][ides]["parameters"]["place"]
-          objname = data['outputContexts'][ides]["parameters"]["objname"]        
-        except:
-          kiki+= 1
-          ides+=1
+          NameUser = data['outputContexts'][jsonIndex]["parameters"]["uname"]
+          Place = data['outputContexts'][jsonIndex]["parameters"]["place"]
+          objname = data['outputContexts'][jsonIndex]["parameters"]["objname"]        
+        except: 
+          jsonIndex+=1
         else:
-          NameUser = data['outputContexts'][ides]["parameters"]["uname"]
-          Place = data['outputContexts'][ides]["parameters"]["place"]
-          objname = data['outputContexts'][ides]["parameters"]["objname"]
+          NameUser = data['outputContexts'][jsonIndex]["parameters"]["uname"]
+          Place = data['outputContexts'][jsonIndex]["parameters"]["place"]
+          objname = data['outputContexts'][jsonIndex]["parameters"]["objname"]
           break
     else:
-      while ides < len(data['outputContexts']):
+      while jsonIndex < len(data['outputContexts']):
         try:
-         Place = data['outputContexts'][ides]["parameters"]["place"]
-         objname = data['outputContexts'][ides]["parameters"]["objname"]        
+         Place = data['outputContexts'][jsonIndex]["parameters"]["place"]
+         objname = data['outputContexts'][jsonIndex]["parameters"]["objname"]        
         except:
-            kiki+= 1
-            ides+=1
+            jsonIndex+=1
         else:
-          Place = data['outputContexts'][ides]["parameters"]["place"]
-          objname = data['outputContexts'][ides]["parameters"]["objname"]
+          Place = data['outputContexts'][jsonIndex]["parameters"]["place"]
+          objname = data['outputContexts'][jsonIndex]["parameters"]["objname"]
           break
-    return ides
+    return jsonIndex
 
 def checkJsonForCalendar(data):
-    kiki = 0
-    ides = 0
-    while ides < len(data['outputContexts']):
+    jsonIndex = 0
+    while jsonIndex < len(data['outputContexts']):
       try:
-        aany = data['outputContexts'][ides]["parameters"]["any"]
-        datetime = data['outputContexts'][ides]["parameters"]["date"]
-      except:
-        kiki+=1
-        ides+=1
+        aany = data['outputContexts'][jsonIndex]["parameters"]["any"]
+        datetime = data['outputContexts'][jsonIndex]["parameters"]["date"]
+      except:   
+        jsonIndex+=1
       else:
-        aany = data['outputContexts'][ides]["parameters"]["any"]
-        dateime = data['outputContexts'][ides]["parameters"]["date"]
+        aany = data['outputContexts'][jsonIndex]["parameters"]["any"]
+        dateime = data['outputContexts'][jsonIndex]["parameters"]["date"]
         break
-    return ides
+    return jsonIndex
 
 def checkJsonForActivity(data):
-    kiki = 0
-    ides = 0
-    while ides < len(data['outputContexts']):
+    
+    jsonIndex = 0
+    while jsonIndex < len(data['outputContexts']):
       try:
-        aany = data['outputContexts'][ides]["parameters"]["activityname"]
-        datetime = data['outputContexts'][ides]["parameters"]["activitytime"]
+        aany = data['outputContexts'][jsonIndex]["parameters"]["activityname"]
+        datetime = data['outputContexts'][jsonIndex]["parameters"]["activitytime"]
  
       except:
-        kiki+=1
-        ides+=1
+        jsonIndex+=1
       else:
-        aany = data['outputContexts'][ides]["parameters"]["activityname"]
-        dateime = data['outputContexts'][ides]["parameters"]["activitytime"]
+        aany = data['outputContexts'][jsonIndex]["parameters"]["activityname"]
+        dateime = data['outputContexts'][jsonIndex]["parameters"]["activitytime"]
         break
-    return ides
+    return jsonIndex
 
 def checkJsonForItem(data,informname):
-    kiki = 0
-    ides = 0
+    jsonIndex = 0
     if not informname:
-      while ides < len(data['outputContexts']):
+      while jsonIndex < len(data['outputContexts']):
         try:
-          informname = data['outputContexts'][ides]["parameters"]["informname"]
-          specifyItemName = data['outputContexts'][ides]["parameters"]["specifyItemName"]
-        except:
-          kiki+= 1
-          ides+=1
+          informname = data['outputContexts'][jsonIndex]["parameters"]["informname"]
+          specifyItemName = data['outputContexts'][jsonIndex]["parameters"]["specifyItemName"]
+        except:   
+          jsonIndex+=1
         else:
-          informname = data['outputContexts'][ides]["parameters"]["informname"]
-          specifyItemName = data['outputContexts'][ides]["parameters"]["specifyItemName"]
+          informname = data['outputContexts'][jsonIndex]["parameters"]["informname"]
+          specifyItemName = data['outputContexts'][jsonIndex]["parameters"]["specifyItemName"]
         break
     else:
-      while ides < len(data['outputContexts']):
+      while jsonIndex < len(data['outputContexts']):
         try:
-            specifyItemName = data['outputContexts'][ides]["parameters"]["specifyItemName"]
+            specifyItemName = data['outputContexts'][jsonIndex]["parameters"]["specifyItemName"]
         except:
-            kiki+= 1
-            ides+=1
+            jsonIndex+=1
         else:
-          specifyItemName = data['outputContexts'][ides]["parameters"]["specifyItemName"]
+          specifyItemName = data['outputContexts'][jsonIndex]["parameters"]["specifyItemName"]
           break
-    return ides
+    return jsonIndex
 
-def checkJsonToday(data):
-    kiki = 0
-    ides = 0
-    while ides < len(data['outputContexts']):
+def checkJsonToday(data):   
+    jsonIndex = 0
+    while jsonIndex < len(data['outputContexts']):
       try:
-        datet = data['outputContexts'][ides]["parameters"]["showreminderdate.original"]
+        datet = data['outputContexts'][jsonIndex]["parameters"]["showreminderdate.original"]
       except:
-        kiki+= 1
-        ides+=1
+        jsonIndex+=1
       else:
-        datet = data['outputContexts'][ides]["parameters"]["showreminderdate.original"]
+        datet = data['outputContexts'][jsonIndex]["parameters"]["showreminderdate.original"]
         break
-    return ides
+    return jsonIndex
 
 def checkService():
   creds = None
@@ -255,7 +244,7 @@ def savehistory(service):
   try:
     data[service]
   except:
-    DBRef.push({service : 1})
+    DBRef.set({service : 1})
   else: 
     oldhistory = data
     DBRef.set({service : oldhistory[service]+1})
@@ -273,6 +262,7 @@ def rejectOrder():
     DateMonthYear = CurrentTime.strftime("%d/%m/%Y")
     HourMinuteSecond = CurrentTime.strftime("%H:%M:%S")
 
+# Intent: [Remember] enterUsername - Reject
     if query_result.get('action') == 'object.confirm.noUsername': 
        Place = query_result['outputContexts'][checkJson(query_result,"")]["parameters"]["place"]
        objname = query_result['outputContexts'][checkJson(query_result,"")]["parameters"]["objname"] 
@@ -293,7 +283,7 @@ def rejectOrder():
          })
           savehistory("remember")
           return {
-            "fulfillmentText": "บันทึกรายการเรียบร้อย",
+            "fulfillmentText": "บันทึกรายการเรียบร้อยเจ้าค่ะ",
             "displayText": '25',
             "source": "webhookdata"
           } 
@@ -310,11 +300,12 @@ def rejectOrder():
             })
           savehistory("remember")
           return {
-            "fulfillmentText": "บันทึกรายการเรียบร้อย",
+            "fulfillmentText": "บันทึกรายการเรียบร้อยเจ้าค่ะ",
             "displayText": '25',
             "source": "webhookdata"
       }
 
+# Intent: [Remember] enterUsername - confirmed
     if query_result.get('action') == 'object.confirm.withUsername':
         RefNoUser = db.reference("/RememberV2")
         NameUser = query_result['outputContexts'][checkJson(query_result,"name")]["parameters"]["uname"]
@@ -337,7 +328,7 @@ def rejectOrder():
           })
             savehistory("remember")
             return {
-              "fulfillmentText": "บันทึกรายการเรียบร้อย",
+              "fulfillmentText": "บันทึกรายการเรียบร้อยเจ้าค่ะ",
               "displayText": '25',
               "source": "webhookdata"
       } 
@@ -354,11 +345,13 @@ def rejectOrder():
               })
           savehistory("remember")
           return {
-              "fulfillmentText": "บันทึกรายการเรียบร้อย",
+              "fulfillmentText": "บันทึกรายการเรียบร้อยเจ้าค่ะ",
               "displayText": '25',
               "source": "webhookdata"
        } 
 
+
+# Intent: [Reminder] Reminder - Time
     if query_result.get('action') == 'reminder.Time':
       event = query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["any"]
       if query_result['outputContexts'][checkJsonForCalendar(query_result)]["parameters"]["date"] == "" :
@@ -372,7 +365,8 @@ def rejectOrder():
         date = dateonly.split("T")[0]
         time = timeonly.split("T")[1].split("+")[0]
         eventtime = dateonly.split("T")[0]+"T"+timeonly.split("T")[1]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+event+" ที่เวลา "+time+" ในวันที่ "+date
+      # --- edit ---
+      fulfillmentText = "คุณได้บันทึกการเเจ้งเตือนไว้ว่า " + event + " <break time='300ms'/> " + " ที่เวลา "+ time + " <break time='300ms'/> " + " ในวันที่ " + " <say-as interpret-as='date' format='yyyymmdd' detail='1'> " + date + " เจ้าค่ะ</say-as> "
       RefFromDatabase = db.reference("/EventReminder") 
       count = 0
       result = checkService().calendarList().list().execute()
@@ -408,8 +402,9 @@ def rejectOrder():
         service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
         ##
         savehistory("reminder")
+        # --- edit ---
         return {
-          "fulfillmentText": fulfillmentText,
+          "fulfillmentText": "<speak>" + fulfillmentText + "</speak>",
           "displayText": '25',
           "source": "webhookdata"
         }
@@ -422,11 +417,13 @@ def rejectOrder():
         ##
         savehistory("reminder")
       return {
-        "fulfillmentText": fulfillmentText,
+        # --- edit ---
+        "fulfillmentText": "<speak>" + fulfillmentText + "</speak>",
         "displayText": '25',
         "source": "webhookdata"
       }
 
+# Intent: [Activity] Activity - Time
     if query_result.get('action') == 'activityTime':
       activityname = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activityname']
       if query_result['outputContexts'][checkJsonForActivity(query_result)]["parameters"]["date"] == "" :
@@ -440,7 +437,8 @@ def rejectOrder():
         date = dateonly.split("T")[0]
         time = timeonly.split("T")[1].split("+")[0]
         temptime = dateonly.split("T")[0]+"T"+timeonly.split("T")[1]
-      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า "+activityname+" ที่เวลา "+time+" ในวันที่ "+date
+      # --- edit ---
+      fulfillmentText = "คุณได้บันทึกกิจกรรมไว้ว่า " + activityname + " <break time='300ms'/> "  + " ที่เวลา " + time + " <break time='300ms'/> "  +" ในวันที่ " + " <say-as interpret-as='date' format='yyyymmdd' detail='1'> " + date + "เจ้าค่ะ </say-as> "
       RefFromDatabase = db.reference("/ActivityReminder") 
       count = 0
       result = checkService().calendarList().list().execute()
@@ -477,7 +475,8 @@ def rejectOrder():
         ##
         savehistory("activity")
         return {
-          "fulfillmentText": fulfillmentText,
+          # --- edit ---
+          "fulfillmentText": "<speak>" + fulfillmentText + "</speak>",
           "displayText": '25',
           "source": "webhookdata"
         }
@@ -490,7 +489,8 @@ def rejectOrder():
         ##
         savehistory("activity")
         return {
-          "fulfillmentText": fulfillmentText,
+          # --- edit ---
+          "fulfillmentText": "<speak>" + fulfillmentText + "</speak>",
           "displayText": '25',
           "source": "webhookdata"
         }      
@@ -498,6 +498,7 @@ def rejectOrder():
 # ------------------------------------------------------------------------------------# 
 # show Part
 
+# Intent: [showRemember - All] showRemember - specifyname
     if query_result.get('action') == 'showAll..specifyname':
       try:
         NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyname"]
@@ -507,23 +508,24 @@ def rejectOrder():
         for x in get.keys():
           if x == NameUserser:
             for y in get[x].keys():
-              textresponse +='<s>คุณบันทึกสิ่งของ : <break time="200ms"/> '+str(get[x][y]["item"])+ '<break time="200ms"/>  ไว้ตำแหน่ง <break time="200ms"/> ' + str(get[x][y]["Location"]) + '</s>'+" "   
+              textresponse +='<s>สิ่งของที่คุณให้จดจำคือ <break time="300ms"/> '+str(get[x][y]["item"])+ '<break time="300ms"/>  ไว้ที่ <break time="300ms"/> ' + str(get[x][y]["Location"]) + '</s>'+" "   
               fullfillmentText = '<speak><p>'+ textresponse+'</p></speak>'
       except:
-        fullfillmentText = '<speak>ขอโทษด้วย <break time="200ms"/> ฉันไม่พบสิ่งของที่คุณต้องการ  <break time="200ms"/></speak>'
+        fullfillmentText = '<speak>ขอโทษด้วย <break time="300ms"/> ฉันไม่พบสิ่งของที่คุณต้องการเจ้าค่ะ  <break time="300ms"/></speak>'
 
+# Intent: [showRemember - All] showRemember - No
     if query_result.get('action') == 'showAllrequest-no':
       try:
         RefFromDatabase = db.reference("/RememberV2/Home")
         textresponse = '' 
         get = RefFromDatabase.get()
         for x in get.keys():
-           textresponse +='<s>คุณบันทึกสิ่งของ : <break time="200ms"/> '+str(get[x]["item"])+ '<break time="200ms"/>  ไว้ตำแหน่ง <break time="200ms"/> ' + str(get[x]["Location"]) + '</s>'+" "   
+           textresponse +='<s>สิ่งของที่คุณให้จดจำคือ <break time="300ms"/> '+str(get[x]["item"])+ '<break time="300ms"/>  ไว้ที่ <break time="300ms"/> ' + str(get[x]["Location"]) + '</s>'+" "   
            fullfillmentText = '<speak><p>'+ textresponse+'</p></speak>'
       except:
-          fullfillmentText = '<speak>ขอโทษด้วย <break time="200ms"/> ฉันไม่พบสิ่งของที่คุณต้องการ  <break time="200ms"/></speak>'
+          fullfillmentText = '<speak>ขอโทษด้วย <break time="300ms"/> ฉันไม่พบสิ่งของที่คุณต้องการเจ้าค่ะ  <break time="300ms"/></speak>'
 
-
+# Intent: [showRemember - specifyItemname] specifyItemname - specifyname
     if query_result.get('action') == 'showSpecify.inform':
       try:
         NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["informname"]
@@ -535,23 +537,26 @@ def rejectOrder():
           if name == NameUserser:
             for itemlist in get[name].keys():
               if get[name][itemlist]["item"] == item:
-                textresponse +='<s>คุณบันทึกสิ่งของ : <break time="200ms"/> '+str(get[name][itemlist]["Location"]) + '<break time="200ms"/> </s>'+" "   
-                fullfillmentText += '<speak><p>'+ textresponse+'</p></speak>'
+                textresponse +='<s>คุณจดจำสิ่งของไว้ที่ <break time="300ms"/> '+str(get[name][itemlist]["Location"]) + '<break time="300ms"/> </s>'+" "   
+                fullfillmentText = '<speak><p>'+ textresponse+'</p></speak>'
       except:
-          fullfillmentText = '<speak>ขอโทษด้วย <break time="200ms"/> ฉันไม่พบสิ่งของที่คุณต้องการ  <break time="200ms"/></speak>'
+          fullfillmentText = '<speak>ขอโทษด้วย <break time="300ms"/> ฉันไม่พบสิ่งของที่คุณต้องการเจ้าค่ะ <break time="300ms"/></speak>'
 
-
+# Intent: [showRemember - specifyItemname] specifyItemname - no
     if query_result.get('action') == 'specifyItemname.no.inform':
       try:
         item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
         RefFromDatabase = db.reference("/RememberV2/Home") 
+        textresponse = '' 
         get = RefFromDatabase.get()
         for x in get.keys():
           if get[x]["item"] == item :
-            fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
+             textresponse +='<s>คุณจดจำสิ่งของไว้ที่ <break time="300ms"/> '+str(get[x]["Location"])+ '<break time="300ms"/> </s>'+" "     
+             fullfillmentText = '<speak><p>'+ textresponse+'</p></speak>'
       except:
-        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-  
+        fullfillmentText = '<speak>ขอโทษด้วย <break time="300ms"/> ฉันไม่พบสิ่งของที่คุณต้องการเจ้าค่ะ  <break time="300ms"/></speak>'
+
+# Intent: [showReminder - All]
     if query_result.get('action') == 'showReminder.All':
       return {
             "fulfillmentText": testcheck("",""),
@@ -559,6 +564,7 @@ def rejectOrder():
             "source": "webhookdata"
       }
 
+# Intent: [showReminder - date]
     if query_result.get('action') == 'showReminder.Date':
       datefromdialog =  query_result['parameters']['showreminderdate'][0]
       resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original']
@@ -574,6 +580,7 @@ def rejectOrder():
       }
       else:
         StringToDate = datetime.fromisoformat(datefromdialog)
+
         datefromdialogStart = datetime.combine(StringToDate, datetime.min.time())
         enddaydate = datetime.combine(datefromdialogStart, datetime.min.time()) + timedelta(1)
         startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
@@ -584,6 +591,8 @@ def rejectOrder():
           "source": "webhookdata"
         }
 
+    
+# Intent: [ShowActivity] ShowActivity - date
     if query_result.get('action') == 'ShowActivity.date' :
       RefFromDatabase = db.reference("/ActivityReminder") 
       datefromdialog = str(query_result["parameters"]["date-time"])
@@ -601,15 +610,16 @@ def rejectOrder():
     if query_result.get('action') == 'showHistory':
       try:
         ref1 = db.reference("/ShowHistory").get()
-        a='คุณใช้คำสั่งบันทึกของ '+str(ref1["Remember"])+' ครั้ง '
-        b='คุณใช้คำสั่งเตือนความจำ '+str(ref1["reminder"])+' ครั้ง '
-        c='คุณใช้คำสั่งบันทึกกิจกรรม '+str(ref1["activity"])+' ครั้ง'
-        fullfillmentText = a+b+c
+        a='<s>คุณใช้คำสั่งจดจำสิ่งของ  <break time="300ms"/> <say-as interpret-as="cardinal">'+str(ref1["Remember"])+'<break time="300ms"/></say-as> ครั้ง </s>'
+        b='<s>คุณใช้คำสั่งเตือนความจำ <break time="300ms"/><say-as interpret-as="cardinal">'+str(ref1["reminder"])+'<break time="300ms"/></say-as> ครั้ง </s>'
+        c='<s>คุณใช้คำสั่งบันทึกกิจกรรม <break time="300ms"/><say-as interpret-as="cardinal">'+str(ref1["activity"])+'<break time="300ms"/></say-as> ครั้ง </s>'
+        fullfillmentText = '<speak>'+a+b+c+'</speak>'
       except:
-        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
+        fullfillmentText = 'ยังไม่มีประวัติการใช้งานเลยเจ้าค่ะ'
   
+# No Intent  
     if fullfillmentText == "":
-      fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'  
+      fullfillmentText = 'ขออภัยดิฉันไม่เข้าใจคำสั่งเจ้าค่ะ'  
     return {
             "fulfillmentText": fullfillmentText,
             "displayText": '50',
