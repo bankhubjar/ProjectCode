@@ -1,3 +1,4 @@
+# ------------------------------------------------------------------------------------# 
 #Python Flask
 from flask import Blueprint
 from flask import Flask, render_template
@@ -46,17 +47,12 @@ ref = db.reference('/users')
 
 firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.firebaseio.com/', None)
 
+# ------------------------------------------------------------------------------------# 
+
 appBlueprint = Blueprint("home",__name__)
-    # data =''
-    # with open("./src/message.json", errors='ignore') as read_file:
-    #    data = json.load(read_file)
-    # # query_result['parameters'][1]['showreminderdate']
-    # return data["queryResult"]['parameters']['showreminderdate'][0]
-@appBlueprint.route('/test2')
-def testcheck2():
-   todaydate = datetime.now()
-   startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
-   return startdateformat
+ 
+# ------------------------------------------------------------------------------------# 
+# Function Check Data
 
 def testcheck(mintimeformDialog,maxtimeformDialog):
     ful = ''
@@ -101,20 +97,14 @@ def testcheck(mintimeformDialog,maxtimeformDialog):
     events = events_result.get('items', [])
 
     if not events:
-        start.append('ไม่มีกิจกรรมแม้แต่นิดเดียวเลยเจ้าค่ะ.')
+        start.append('ไม่มีกิจกรรมแม้แต่นิดเดียวเลยเจ้าค่ะ')
     for event in events:
-        eiei = event['start'].get('dateTime', event['start'].get('date'))
-        start.append('การแจ้งเตือนของคุณมี '+event['summary']+' ตอน '+str(eiei.split("T")[0])+' เวลา '+str(eiei.split("T")[1].split("+")[0])+'')
+        TextResponse = event['start'].get('dateTime', event['start'].get('date'))
+        start.append('การแจ้งเตือนของคุณมี '+event['summary']+' ตอน '+str(TextResponse.split("T")[0])+' เวลา '+str(TextResponse.split("T")[1].split("+")[0])+'')
     for x in start:
       ful += x 
     return str(ful)
-      # i = 0 
-      # fullfillmentText = 'eiei'
 
-      # calendarArray = callCa(checkService())
-      # while i > 3:
-      #    fullfillmentText += calendarArray[i]
-        #  i+=1
         
 def checkJson(data,name):
     kiki = 0
@@ -271,52 +261,9 @@ def savehistory(service):
     oldhistory = data
     DBRef.set({service : oldhistory[service]+1})
 
-@appBlueprint.route('/test1')
-def wtf():
-       fullfillmentText=''
-       RefEvent = db.reference("/EventReminder")
-       getEvent = RefEvent.get()
-       Event = []
-       a=''
-       try:
-        getEvent.keys()
-       except:
-         fullfillmentText = 'ไม่มีการบันทึกกิจกรรม'
-       else:
-         for x in getEvent.keys():
-           fullfillmentText+='กิจกรรมของคุณคือ'+getEvent[x]['event']+'ต้องทำตอน'+getEvent[x]['time']+'วันที่'+getEvent[x]['date']+""
-       return fullfillmentText
 
-@appBlueprint.route('/calendar')
-def calendar():
-    service = checkService()
-    result = service.calendarList().list().execute()
-    calendar_id = result['items'][2]['id']
-    # Call the Calendar API
-    event = "bruh"
-    datetimeq = "2021-02-27T15:00:00+07:00"
-    eventcontent = {
-        'summary': event,
-        'location': '',
-        'description': '',
-        'start': {
-          'dateTime': datetimeq,
-          'timeZone': 'Asia/Bangkok',
-        },
-        'end': {
-          'dateTime': datetimeq,
-          'timeZone': 'Asia/Bangkok',
-        },
-        'reminders': {
-          'useDefault': False,
-          'overrides': [
-            {'method': 'email', 'minutes': 24 * 60},
-            {'method': 'popup', 'minutes': 10},
-          ],
-        },
-      }
-    service.events().insert(calendarId=calendar_id, body=eventcontent).execute()
-    return "sent event to "+calendar_id
+# ------------------------------------------------------------------------------------# 
+# Webhook Part
 
 @appBlueprint.route('/webhook',methods=['POST'])
 def rejectOrder():
@@ -480,85 +427,6 @@ def rejectOrder():
         "displayText": '25',
         "source": "webhookdata"
       }
-             
-    if query_result.get('action') == 'showAll..specifyname':
-      try:
-        NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyname"]
-        RefFromDatabase = db.reference("/RememberV2")
-        get = RefFromDatabase.get()
-        for x in get.keys():
-          if x == NameUserser:
-            for y in get[x].keys():
-              fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x][y]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x][y]["Location"]) + "  "   
-      except:
-        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-
-    if query_result.get('action') == 'showAllrequest-no':
-      try:
-        RefFromDatabase = db.reference("/RememberV2/Home") 
-        get = RefFromDatabase.get()
-        for x in get.keys():
-          fullfillmentText +=' คุณบันทึกสิ่งของ : '+str(get[x]["item"])+ ' ไว้ตำแหน่ง ' + str(get[x]["Location"]) + "  "
-      except:
-        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-
-    if query_result.get('action') == 'showSpecify.inform':
-      try:
-        NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["informname"]
-        item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
-        RefFromDatabase = db.reference("/RememberV2") 
-        get = RefFromDatabase.get()
-        for name in get.keys():
-          if name == NameUserser:
-            for itemlist in get[name].keys():
-              if get[name][itemlist]["item"] == item:
-                fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[name][itemlist]["Location"]) + "  " 
-      except:
-        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-
-    if query_result.get('action') == 'specifyItemname.no.inform':
-      try:
-        item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
-        RefFromDatabase = db.reference("/RememberV2/Home") 
-        get = RefFromDatabase.get()
-        for x in get.keys():
-          if get[x]["item"] == item :
-            fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
-      except:
-        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
-  
-    if query_result.get('action') == 'showReminder.All':
-      return {
-            "fulfillmentText": testcheck("",""),
-            "displayText": '50',
-            "source": "webhookdata"
-      }
-
-    if query_result.get('action') == 'showReminder.Date':
-      datefromdialog =  query_result['parameters']['showreminderdate'][0]
-      resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original']
-      if resultcheck == "วันนี้":
-        todaydate = datetime.now()
-        enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
-        startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
-        newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
-        return {
-        "fulfillmentText": testcheck(todaydate,newcheck),
-        "displayText": '50',
-        "source": "webhookdata"
-      }
-      else:
-        StringToDate = datetime.fromisoformat(datefromdialog)
-
-        datefromdialogStart = datetime.combine(StringToDate, datetime.min.time())
-        enddaydate = datetime.combine(datefromdialogStart, datetime.min.time()) + timedelta(1)
-        startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
-        enddaydateformat = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
-        return {
-          "fulfillmentText": testcheck(startdateformat,enddaydateformat),
-          "displayText": '50',
-          "source": "webhookdata"
-        }
 
     if query_result.get('action') == 'activityTime':
       activityname = query_result['outputContexts'][checkJsonForActivity(query_result)]['parameters']['activityname']
@@ -626,7 +494,97 @@ def rejectOrder():
           "fulfillmentText": fulfillmentText,
           "displayText": '25',
           "source": "webhookdata"
-        } 
+        }      
+
+# ------------------------------------------------------------------------------------# 
+# show Part
+
+    if query_result.get('action') == 'showAll..specifyname':
+      try:
+        NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyname"]
+        RefFromDatabase = db.reference("/RememberV2")
+        get = RefFromDatabase.get()
+        textresponse = ''
+        for x in get.keys():
+          if x == NameUserser:
+            for y in get[x].keys():
+              textresponse +='<s>คุณบันทึกสิ่งของ : <break time="200ms"/> '+str(get[x][y]["item"])+ '<break time="200ms"/>  ไว้ตำแหน่ง <break time="200ms"/> ' + str(get[x][y]["Location"]) + '</s>'+" "   
+              fullfillmentText = '<speak><p>'+ textresponse+'</p></speak>'
+      except:
+        fullfillmentText = '<speak>ขอโทษด้วย <break time="200ms"/> ฉันไม่พบสิ่งของที่คุณต้องการ  <break time="200ms"/></speak>'
+
+    if query_result.get('action') == 'showAllrequest-no':
+      try:
+        RefFromDatabase = db.reference("/RememberV2/Home")
+        textresponse = '' 
+        get = RefFromDatabase.get()
+        for x in get.keys():
+           textresponse +='<s>คุณบันทึกสิ่งของ : <break time="200ms"/> '+str(get[x]["item"])+ '<break time="200ms"/>  ไว้ตำแหน่ง <break time="200ms"/> ' + str(get[x]["Location"]) + '</s>'+" "   
+           fullfillmentText = '<speak><p>'+ textresponse+'</p></speak>'
+      except:
+          fullfillmentText = '<speak>ขอโทษด้วย <break time="200ms"/> ฉันไม่พบสิ่งของที่คุณต้องการ  <break time="200ms"/></speak>'
+
+
+    if query_result.get('action') == 'showSpecify.inform':
+      try:
+        NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["informname"]
+        item = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["specifyItemName"]
+        RefFromDatabase = db.reference("/RememberV2") 
+        textresponse = '' 
+        get = RefFromDatabase.get()
+        for name in get.keys():
+          if name == NameUserser:
+            for itemlist in get[name].keys():
+              if get[name][itemlist]["item"] == item:
+                textresponse +='<s>คุณบันทึกสิ่งของ : <break time="200ms"/> '+str(get[name][itemlist]["Location"]) + '<break time="200ms"/> </s>'+" "   
+                fullfillmentText += '<speak><p>'+ textresponse+'</p></speak>'
+      except:
+          fullfillmentText = '<speak>ขอโทษด้วย <break time="200ms"/> ฉันไม่พบสิ่งของที่คุณต้องการ  <break time="200ms"/></speak>'
+
+
+    if query_result.get('action') == 'specifyItemname.no.inform':
+      try:
+        item = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyItemName"]
+        RefFromDatabase = db.reference("/RememberV2/Home") 
+        get = RefFromDatabase.get()
+        for x in get.keys():
+          if get[x]["item"] == item :
+            fullfillmentText +=' คุณบันทึกสิ่งของไว้ที่ ' + str(get[x]["Location"]) + "  "
+      except:
+        fullfillmentText = 'ไม่พบสิ่งของที่คุณต้องการ'
+  
+    if query_result.get('action') == 'showReminder.All':
+      return {
+            "fulfillmentText": testcheck("",""),
+            "displayText": '50',
+            "source": "webhookdata"
+      }
+
+    if query_result.get('action') == 'showReminder.Date':
+      datefromdialog =  query_result['parameters']['showreminderdate'][0]
+      resultcheck = query_result['outputContexts'][checkJsonToday(query_result)]['parameters']['showreminderdate.original']
+      if resultcheck == "วันนี้":
+        todaydate = datetime.now()
+        enddaydate = datetime.combine(todaydate, datetime.min.time()) + timedelta(1)
+        startdateformat = str(todaydate).split(" ")[0]+"T"+str(todaydate).split(" ")[1].split(".")[0]+"+07:00"
+        newcheck = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
+        return {
+        "fulfillmentText": testcheck(todaydate,newcheck),
+        "displayText": '50',
+        "source": "webhookdata"
+      }
+      else:
+        StringToDate = datetime.fromisoformat(datefromdialog)
+
+        datefromdialogStart = datetime.combine(StringToDate, datetime.min.time())
+        enddaydate = datetime.combine(datefromdialogStart, datetime.min.time()) + timedelta(1)
+        startdateformat = str(datefromdialogStart).split(" ")[0]+"T"+str(datefromdialogStart).split(" ")[1]+"+07:00"
+        enddaydateformat = str(enddaydate).split(" ")[0]+"T"+str(enddaydate).split(" ")[1]+"+07:00"
+        return {
+          "fulfillmentText": testcheck(startdateformat,enddaydateformat),
+          "displayText": '50',
+          "source": "webhookdata"
+        }
 
     if query_result.get('action') == 'ShowActivity.date' :
       datefromdialog = query_result['outputContexts']["parameters"]["date-time"]
@@ -648,5 +606,5 @@ def rejectOrder():
             "displayText": '50',
             "source": "webhookdata"
       }  
-    
+# ------------------------------------------------------------------------------------# 
 
