@@ -107,7 +107,7 @@ def testcheck(mintimeformDialog,maxtimeformDialog):
         
 def checkJson(data,name):   
     jsonIndex = 0
-    if not name:
+    if name == "name":
       while jsonIndex < len(data['outputContexts']):
         try:
           NameUser = data['outputContexts'][jsonIndex]["parameters"]["uname"]
