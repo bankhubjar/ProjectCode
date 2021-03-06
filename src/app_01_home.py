@@ -241,12 +241,11 @@ def callCa(service):
 def savehistory(service):
   DBRef = db.reference("/ShowHistory")
   deta = DBRef.get()
-  if deta[service] == service:
+  if service in data:
     oldhistory = data
     DBRef.update({service : oldhistory[service]+1})
-  else:
+  else: 
     DBRef.update({service : 1})
-
 
 # ------------------------------------------------------------------------------------# 
 # Webhook Part
