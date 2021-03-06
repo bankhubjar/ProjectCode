@@ -244,10 +244,10 @@ def savehistory(service):
   try:
     data[service]
   except:
-    DBRef.set({service : 1})
+    DBRef.child(service).set({service : 1})
   else: 
     oldhistory = data
-    DBRef.set({service : oldhistory[service]+1})
+    DBRef.update({service : oldhistory[service]+1})
 
 
 # ------------------------------------------------------------------------------------# 
@@ -508,8 +508,8 @@ def rejectOrder():
         for x in get.keys():
           if x == NameUserser:
             for y in get[x].keys():
-              textresponse +='<s>สิ่งของที่คุณให้จดจำคือ <break time="300ms"/> '+str(get[x][y]["item"])+ '<break time="300ms"/>  ไว้ที่ <break time="300ms"/> ' + str(get[x][y]["Location"]) + '</s>'+" "   
-              fullfillmentText = '<speak><p>'+ textresponse+'</p></speak>'
+              textresponse +='<s>'+str(get[x][y]["item"])+ '<break time="300ms"/>  ไว้ที่ <break time="300ms"/> ' + str(get[x][y]["Location"]) + '</s>'+" "   
+              fullfillmentText = '<speak><p>สิ่งของที่คุณให้จดจำคือ <break time="300ms"/> '+ textresponse+'</p></speak>'
       except:
         fullfillmentText = '<speak>ขอโทษด้วย <break time="300ms"/> ฉันไม่พบสิ่งของที่คุณต้องการเจ้าค่ะ  <break time="300ms"/></speak>'
 
@@ -520,8 +520,8 @@ def rejectOrder():
         textresponse = '' 
         get = RefFromDatabase.get()
         for x in get.keys():
-           textresponse +='<s>สิ่งของที่คุณให้จดจำคือ <break time="300ms"/> '+str(get[x]["item"])+ '<break time="300ms"/>  ไว้ที่ <break time="300ms"/> ' + str(get[x]["Location"]) + '</s>'+" "   
-           fullfillmentText = '<speak><p>'+ textresponse+'</p></speak>'
+           textresponse +='<s>'+str(get[x]["item"])+ '<break time="300ms"/>  ไว้ที่ <break time="300ms"/> ' + str(get[x]["Location"]) + '</s>'+" "   
+           fullfillmentText = '<speak><p>สิ่งของที่คุณให้จดจำคือ <break time="300ms"/> '+ textresponse+'</p></speak>'
       except:
           fullfillmentText = '<speak>ขอโทษด้วย <break time="300ms"/> ฉันไม่พบสิ่งของที่คุณต้องการเจ้าค่ะ  <break time="300ms"/></speak>'
 
@@ -591,7 +591,6 @@ def rejectOrder():
           "source": "webhookdata"
         }
 
-    
 # Intent: [ShowActivity] ShowActivity - date
     if query_result.get('action') == 'ShowActivity.date' :
       RefFromDatabase = db.reference("/ActivityReminder") 
