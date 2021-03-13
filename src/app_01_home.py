@@ -497,7 +497,7 @@ def rejectOrder():
 
 # Intent: [showRemember - All] showRemember - specifyname
     if query_result.get('action') == 'showAll..specifyname':
-      try:
+      
         NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"")]["parameters"]["specifyname"]
         RefFromDatabase = db.reference("/RememberV2")
         get = RefFromDatabase.get()
@@ -507,8 +507,7 @@ def rejectOrder():
             for y in get[x].keys():
               textresponse +='<s>'+str(get[x][y]["item"])+ '<break time="300ms"/>  ไว้ที่ <break time="300ms"/> ' + str(get[x][y]["Location"]) + '</s>'+" "   
               fullfillmentText = '<speak><p>สิ่งของที่คุณให้จดจำคือ <break time="300ms"/> '+ textresponse+'</p></speak>'
-      except:
-        fullfillmentText = '<speak>ขอโทษด้วย <break time="300ms"/> ฉันไม่พบสิ่งของที่คุณต้องการเจ้าค่ะ  <break time="300ms"/></speak>'
+
 
 # Intent: [showRemember - All] showRemember - No
     if query_result.get('action') == 'showAllrequest-no':
