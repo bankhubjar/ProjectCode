@@ -176,6 +176,15 @@ def checkJsonForItem(data,informname):
           informname = data['outputContexts'][jsonIndex]["parameters"]["informname"]
           specifyItemName = data['outputContexts'][jsonIndex]["parameters"]["specifyItemName"]
         break
+    if informname == "name":
+      while jsonIndex <len(data['outputContexts']):
+        try:
+          informname = data['outputContexts'][jsonIndex]["parameters"]["informname"]
+        except:
+          jsonIndex+=1
+        else:
+          informname = data['outputContexts'][jsonIndex]["parameters"]["informname"]
+        break
     else:
       while jsonIndex < len(data['outputContexts']):
         try:
@@ -498,7 +507,7 @@ def rejectOrder():
 # Intent: [showRemember - All] showRemember - specifyname
     if query_result.get('action') == 'showAll..specifyname':
       try:
-        NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"specifyname")]["parameters"]["specifyname"]
+        NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"name")]["parameters"]["informname"]
         RefFromDatabase = db.reference("/RememberV2")
         get = RefFromDatabase.get()
         textresponse = ''
@@ -522,7 +531,7 @@ def rejectOrder():
       except:
           fullfillmentText = '<speak>ขอโทษด้วย <break time="300ms"/> ฉันไม่พบสิ่งของที่คุณต้องการเจ้าค่ะ  <break time="300ms"/></speak>'
 
-# Intent: [showRemember - specifyItemname] specifyItemname - specifyname
+# Intent: [showRemember - specifyItemname] specifyItemname -ด specifyname
     if query_result.get('action') == 'showSpecify.inform':
       try:
         NameUserser = query_result['outputContexts'][checkJsonForItem(query_result,"informname")]["parameters"]["informname"]
