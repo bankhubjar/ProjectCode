@@ -34,18 +34,18 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 tz = pytz.timezone('Asia/Bangkok')
 
 # Fetch the service account key JSON file contents
-cred = credentials.Certificate('./src/testproject-9cef3-firebase-adminsdk-1hkji-3cdddd3c46.json')
+cred = credentials.Certificate('./src/testprojectfornest-e54c3-firebase-adminsdk-w7eku-4db71d3e64.json')
 
 # Initialize the app with a service account, granting admin privileges
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://testproject-9cef3-default-rtdb.firebaseio.com/'
+    'databaseURL': 'https://testprojectfornest-e54c3-default-rtdb.firebaseio.com/'
 })
 
 # As an admin, the app has access to read and write all data, regradless of Security Rules
 ref = db.reference('/users')
 
 
-firebase = firebase.FirebaseApplication('https://testproject-9cef3-default-rtdb.firebaseio.com/', None)
+firebase = firebase.FirebaseApplication('https://testprojectfornest-e54c3-default-rtdb.firebaseio.com/', None)
 
 # ------------------------------------------------------------------------------------# 
 
